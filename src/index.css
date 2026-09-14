@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color-scheme: light dark;
+  }
+
+  body {
+    @apply antialiased text-neutral-800 bg-neutral-50 dark:bg-neutral-950 dark:text-neutral-100 min-h-screen selection:bg-neutral-200 dark:selection:bg-neutral-800;
+  }
+
+  /* Custom scrollbar styling: transparent by default, visible on hover */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    transition: scrollbar-color 0.2s ease-in-out;
+  }
+
+  *:hover {
+    scrollbar-color: rgba(140, 140, 140, 0.35) transparent;
+  }
+
+  .dark *:hover,
+  html.dark *:hover {
+    scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+  }
+
+  /* WebKit scrollbar rules */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 9999px;
+    transition: background-color 0.2s ease-in-out;
+  }
+
+  /* When hovering over html, body, or scrollable container, show thumb */
+  html:hover::-webkit-scrollbar-thumb,
+  body:hover::-webkit-scrollbar-thumb,
+  *:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(140, 140, 140, 0.35);
+  }
+
+  .dark html:hover::-webkit-scrollbar-thumb,
+  .dark body:hover::-webkit-scrollbar-thumb,
+  .dark *:hover::-webkit-scrollbar-thumb,
+  html.dark:hover::-webkit-scrollbar-thumb,
+  body.dark:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.25);
+  }
+
+  /* Hovering directly on thumb */
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(100, 100, 100, 0.65) !important;
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover,
+  html.dark ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.45) !important;
+  }
+}

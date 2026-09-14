@@ -1,0 +1,6 @@
+{
+  "name": "DevNav - 开发者导航站",
+  "description": "简洁高效的静态开发者导航站，汇集常用开发工具、技术文档与前沿资源，支持暗色模式与实时检索。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
