@@ -1,7 +1,9 @@
-import React, { useRef, useEffect } from 'react';
-import { Search, X, Menu } from 'lucide-react';
-import { ThemeToggle } from './ThemeToggle';
-import { ThemeMode } from '../types';
+import React, { useRef, useEffect } from "react";
+import { Search, X, Menu } from "lucide-react";
+
+import { ThemeToggle } from "./ThemeToggle";
+
+import type { ThemeMode } from "../types";
 
 interface TopBarProps {
   onOpenMobileMenu: () => void;
@@ -25,21 +27,24 @@ export const TopBar: React.FC<TopBarProps> = ({
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (
-        (e.key === '/' && document.activeElement !== inputRef.current) ||
-        ((e.metaKey || e.ctrlKey) && e.key === 'k')
+        (e.key === "/" && document.activeElement !== inputRef.current) ||
+        ((e.metaKey || e.ctrlKey) && e.key === "k")
       ) {
         e.preventDefault();
         inputRef.current?.focus();
-      } else if (e.key === 'Escape' && document.activeElement === inputRef.current) {
+      } else if (
+        e.key === "Escape" &&
+        document.activeElement === inputRef.current
+      ) {
         inputRef.current?.blur();
         if (searchQuery) {
-          onSearchChange('');
+          onSearchChange("");
         }
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [searchQuery, onSearchChange]);
 
   return (
@@ -54,7 +59,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             id="mobile-menu-toggle-btn"
             type="button"
             onClick={onOpenMobileMenu}
-            title="打开导航栏"
+            title="Open navigation"
             className="lg:hidden p-2 -ml-2 rounded-xl text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
           >
             <Menu className="w-5 h-5" />
@@ -73,15 +78,15 @@ export const TopBar: React.FC<TopBarProps> = ({
               type="text"
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              placeholder="搜索工具、技术文档、分类或标签 (快捷键 / 或 ⌘K)..."
+              placeholder="Search tools, docs, categories, or tags (press / or ⌘K)..."
               className="w-full pl-9 pr-14 py-2 text-sm bg-neutral-100 dark:bg-neutral-900 border border-transparent dark:border-neutral-800 rounded-xl focus:outline-hidden focus:border-neutral-300 dark:focus:border-neutral-700 focus:bg-white dark:focus:bg-neutral-900 text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500 transition-all"
             />
             <div className="absolute inset-y-0 right-0 pr-2.5 flex items-center gap-1">
               {searchQuery ? (
                 <button
                   type="button"
-                  onClick={() => onSearchChange('')}
-                  title="清除搜索"
+                  onClick={() => onSearchChange("")}
+                  title="Clear search"
                   className="p-1 rounded-md text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-800"
                 >
                   <X className="w-3.5 h-3.5" />

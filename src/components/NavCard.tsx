@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { ExternalLink, Star, Copy, Check, Globe, Sparkles } from 'lucide-react';
-import { NavItem } from '../types';
-import { getDomain, getFaviconUrl } from '../lib/favicon';
+import React, { useState } from "react";
+import { ExternalLink, Star, Copy, Check, Globe, Sparkles } from "lucide-react";
+
+import { getDomain, getFaviconUrl } from "../lib/favicon";
+
+import type { NavItem } from "../types";
 
 interface NavCardProps {
   item: NavItem;
@@ -67,7 +69,7 @@ export const NavCard: React.FC<NavCardProps> = ({
                 </h3>
                 {item.featured && (
                   <span
-                    title="精选推荐"
+                    title="Featured"
                     className="inline-flex items-center p-0.5 text-amber-500 dark:text-amber-400"
                   >
                     <Sparkles className="w-3 h-3" />
@@ -86,15 +88,15 @@ export const NavCard: React.FC<NavCardProps> = ({
               id={`fav-btn-${item.id}`}
               type="button"
               onClick={handleFavoriteClick}
-              title={isFavorite ? '取消收藏' : '收藏'}
+              title={isFavorite ? "Remove favorite" : "Add favorite"}
               className={`p-1.5 rounded-lg transition-colors ${
                 isFavorite
-                  ? 'text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-950/30'
-                  : 'text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800'
+                  ? "text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-950/30"
+                  : "text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
               }`}
             >
               <Star
-                className={`w-4 h-4 ${isFavorite ? 'fill-amber-500' : ''}`}
+                className={`w-4 h-4 ${isFavorite ? "fill-amber-500" : ""}`}
               />
             </button>
 
@@ -102,7 +104,7 @@ export const NavCard: React.FC<NavCardProps> = ({
               id={`copy-btn-${item.id}`}
               type="button"
               onClick={handleCopy}
-              title="复制链接"
+              title="Copy link"
               className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
             >
               {copied ? (

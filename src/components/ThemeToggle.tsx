@@ -1,6 +1,7 @@
-import React from 'react';
-import { Sun, Moon, Monitor } from 'lucide-react';
-import { ThemeMode } from '../types';
+import React from "react";
+import { Sun, Moon, Monitor } from "lucide-react";
+
+import type { ThemeMode } from "../types";
 
 interface ThemeToggleProps {
   theme: ThemeMode;
@@ -13,6 +14,8 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
   resolvedDark,
   onThemeChange,
 }) => {
+  const systemModeLabel = resolvedDark ? "dark" : "light";
+
   return (
     <div
       id="theme-toggle-container"
@@ -21,12 +24,13 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
       <button
         id="theme-btn-light"
         type="button"
-        title="浅色模式"
-        onClick={() => onThemeChange('light')}
+        title={theme === "light" ? "Current: light mode" : "Light mode"}
+        aria-pressed={theme === "light"}
+        onClick={() => onThemeChange("light")}
         className={`p-1.5 rounded-md text-xs font-medium transition-colors flex items-center gap-1 ${
-          theme === 'light'
-            ? 'bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 shadow-xs'
-            : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'
+          theme === "light"
+            ? "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 shadow-xs"
+            : "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
         }`}
       >
         <Sun className="w-3.5 h-3.5" />
@@ -35,12 +39,13 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
       <button
         id="theme-btn-dark"
         type="button"
-        title="暗色模式"
-        onClick={() => onThemeChange('dark')}
+        title={theme === "dark" ? "Current: dark mode" : "Dark mode"}
+        aria-pressed={theme === "dark"}
+        onClick={() => onThemeChange("dark")}
         className={`p-1.5 rounded-md text-xs font-medium transition-colors flex items-center gap-1 ${
-          theme === 'dark'
-            ? 'bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 shadow-xs'
-            : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'
+          theme === "dark"
+            ? "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 shadow-xs"
+            : "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
         }`}
       >
         <Moon className="w-3.5 h-3.5" />
@@ -49,12 +54,15 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
       <button
         id="theme-btn-system"
         type="button"
-        title="跟随系统"
-        onClick={() => onThemeChange('system')}
+        title={
+          theme === "system" ? `Follow system (${systemModeLabel})` : "Follow system"
+        }
+        aria-pressed={theme === "system"}
+        onClick={() => onThemeChange("system")}
         className={`p-1.5 rounded-md text-xs font-medium transition-colors flex items-center gap-1 ${
-          theme === 'system'
-            ? 'bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 shadow-xs'
-            : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'
+          theme === "system"
+            ? "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 shadow-xs"
+            : "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
         }`}
       >
         <Monitor className="w-3.5 h-3.5" />

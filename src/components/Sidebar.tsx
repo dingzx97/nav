@@ -1,15 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
-import {
-  Layers,
-  Star,
-  X,
-  ChevronDown,
-  ChevronRight,
-  FolderOpen,
-} from 'lucide-react';
-import { Category } from '../types';
-import { CATEGORIES } from '../data/links';
-import { CategoryIcon } from './CategoryIcon';
+import React, { useState, useEffect, useRef } from "react";
+import { Layers, Star, X, ChevronDown, ChevronRight } from "lucide-react";
+
+import { CategoryIcon } from "./CategoryIcon";
+
+import { CATEGORIES } from "../data/links";
+
+import type { Category } from "../types";
 
 interface SidebarProps {
   isOpenMobile: boolean;
@@ -17,13 +13,19 @@ interface SidebarProps {
   selectedCategory: string | null;
   selectedSubCategory: string | null;
   onSelectCategory: (categoryId: string | null) => void;
-  onSelectSubCategory: (categoryId: string, subCategoryId: string | null) => void;
+  onSelectSubCategory: (
+    categoryId: string,
+    subCategoryId: string | null,
+  ) => void;
   showFavoritesOnly: boolean;
   onToggleFavoritesOnly: () => void;
   favoritesCount: number;
   totalCount: number;
   getItemCountByCategory: (categoryId: string) => number;
-  getItemCountBySubCategory: (categoryId: string, subCategoryId: string) => number;
+  getItemCountBySubCategory: (
+    categoryId: string,
+    subCategoryId: string,
+  ) => number;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -41,31 +43,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
   getItemCountBySubCategory,
 }) => {
   // Track which category accordion is expanded
-  const [expandedCats, setExpandedCats] = useState<Record<string, boolean>>(() => {
-    const initial: Record<string, boolean> = {};
-    CATEGORIES.forEach((cat) => {
-      initial[cat.id] = true;
-    });
-    return initial;
-  });
+  const [expandedCats, setExpandedCats] = useState<Record<string, boolean>>(
+    () => Object.fromEntries(CATEGORIES.map((cat) => [cat.id, true])),
+  );
 
   const sidebarNavRef = useRef<HTMLElement>(null);
-
-  // Automatically expand the category that contains the selected subcategory or category
-  useEffect(() => {
-    if (selectedCategory) {
-      setExpandedCats((prev) => ({
-        ...prev,
-        [selectedCategory]: true,
-      }));
-    }
-  }, [selectedCategory, selectedSubCategory]);
 
   // Keep sidebar view in sync with the active category/subcategory
   useEffect(() => {
     if (!selectedCategory || showFavoritesOnly) {
-      if (selectedCategory === null && !showFavoritesOnly && sidebarNavRef.current) {
-        sidebarNavRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+      if (
+        selectedCategory === null &&
+        !showFavoritesOnly &&
+        sidebarNavRef.current
+      ) {
+        sidebarNavRef.current.scrollTo({ top: 0, behavior: "smooth" });
       }
       return;
     }
@@ -78,8 +70,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
       const targetEl = document.getElementById(targetId);
       if (targetEl) {
         targetEl.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
+          behavior: "smooth",
+          block: "nearest",
         });
       }
     }, 60);
@@ -134,7 +126,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <aside
         id="app-sidebar"
         className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-white dark:bg-neutral-900 border-r border-neutral-200/80 dark:border-neutral-800 flex flex-col transition-all duration-300 ease-in-out lg:translate-x-0 ${
-          isOpenMobile ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
+          isOpenMobile ? "translate-x-0 shadow-2xl" : "-translate-x-full"
         }`}
       >
         {/* Brand Header */}
@@ -146,7 +138,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             className="flex items-center gap-2.5 text-left group"
           >
             <div className="w-8 h-8 rounded-lg bg-neutral-900 dark:bg-neutral-100 flex items-center justify-center text-white dark:text-neutral-900 font-mono font-bold text-sm shadow-xs transition-transform group-hover:scale-105">
-              {'</>'}
+              {"</>"}
             </div>
             <div>
               <div className="flex items-center gap-1.5">
@@ -158,7 +150,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </span>
               </div>
               <p className="text-[11px] text-neutral-500 dark:text-neutral-400 -mt-0.5">
-                开发者工具与文档导航
+                Developer tools and documentation
               </p>
             </div>
           </button>
@@ -175,11 +167,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Scrollable Navigation Items */}
-        <nav ref={sidebarNavRef} className="flex-1 px-3 py-4 space-y-6 overflow-y-auto custom-scrollbar">
+        <nav
+          ref={sidebarNavRef}
+          className="flex-1 px-3 py-4 space-y-6 overflow-y-auto custom-scrollbar"
+        >
           {/* Main Navigation */}
           <div>
             <div className="px-2.5 mb-2 text-[11px] font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
-              概览视图
+              Overview
             </div>
             <div className="space-y-1">
               <button
@@ -188,13 +183,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 onClick={handleSelectAll}
                 className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-medium transition-colors ${
                   selectedCategory === null && !showFavoritesOnly
-                    ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 font-semibold'
-                    : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-850 hover:text-neutral-900 dark:hover:text-neutral-100'
+                    ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 font-semibold"
+                    : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-700/60 hover:text-neutral-900 dark:hover:text-neutral-100"
                 }`}
               >
                 <div className="flex items-center gap-2.5">
                   <Layers className="w-4 h-4 text-neutral-500" />
-                  <span>全部资源</span>
+                  <span>All resources</span>
                 </div>
                 <span className="text-[11px] px-2 py-0.2 rounded-md bg-neutral-200/60 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 font-mono">
                   {totalCount}
@@ -207,25 +202,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 onClick={handleFavoritesClick}
                 className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-medium transition-colors ${
                   showFavoritesOnly
-                    ? 'bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 font-semibold'
-                    : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-850 hover:text-neutral-900 dark:hover:text-neutral-100'
+                    ? "bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 font-semibold"
+                    : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-700/60 hover:text-neutral-900 dark:hover:text-neutral-100"
                 }`}
               >
                 <div className="flex items-center gap-2.5">
                   <Star
                     className={`w-4 h-4 ${
                       showFavoritesOnly
-                        ? 'fill-amber-500 text-amber-500'
-                        : 'text-neutral-500'
+                        ? "fill-amber-500 text-amber-500"
+                        : "text-neutral-500"
                     }`}
                   />
-                  <span>我的收藏</span>
+                  <span>Favorites</span>
                 </div>
                 <span
                   className={`text-[11px] px-2 py-0.2 rounded-md font-mono ${
                     showFavoritesOnly
-                      ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400'
-                      : 'bg-neutral-200/60 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400'
+                      ? "bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400"
+                      : "bg-neutral-200/60 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400"
                   }`}
                 >
                   {favoritesCount}
@@ -238,16 +233,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div>
             <div className="flex items-center justify-between px-2.5 mb-2">
               <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
-                分类与子分类
+                Categories
               </span>
             </div>
 
             <div className="space-y-1.5">
               {CATEGORIES.map((cat: Category) => {
-                const isCatSelected = selectedCategory === cat.id && !showFavoritesOnly;
-                const isExpanded = !!expandedCats[cat.id];
+                const isCatSelected =
+                  selectedCategory === cat.id && !showFavoritesOnly;
+                const isExpanded =
+                  !!expandedCats[cat.id] || selectedCategory === cat.id;
                 const catCount = getItemCountByCategory(cat.id);
-                const hasSubcategories = cat.subcategories && cat.subcategories.length > 0;
+                const hasSubcategories =
+                  cat.subcategories && cat.subcategories.length > 0;
 
                 return (
                   <div key={cat.id} className="space-y-0.5">
@@ -256,8 +254,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       id={`sidebar-cat-${cat.id}`}
                       className={`group flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-medium transition-all ${
                         isCatSelected
-                          ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 font-semibold shadow-2xs'
-                          : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-850 hover:text-neutral-900 dark:hover:text-neutral-100'
+                          ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 font-semibold shadow-2xs"
+                          : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-700/60 hover:text-neutral-900 dark:hover:text-neutral-100"
                       }`}
                     >
                       <button
@@ -269,8 +267,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                           name={cat.iconName}
                           className={`w-4 h-4 shrink-0 ${
                             isCatSelected
-                              ? 'text-neutral-900 dark:text-neutral-100'
-                              : 'text-neutral-400 group-hover:text-neutral-600 dark:group-hover:text-neutral-300'
+                              ? "text-neutral-900 dark:text-neutral-100"
+                              : "text-neutral-400 group-hover:text-neutral-600 dark:group-hover:text-neutral-300"
                           }`}
                         />
                         <span className="truncate">{cat.name}</span>
@@ -285,7 +283,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                           <button
                             type="button"
                             onClick={(e) => toggleAccordion(cat.id, e)}
-                            title={isExpanded ? '收起子分类' : '展开子分类'}
+                            title={isExpanded ? "Collapse subcategories" : "Expand subcategories"}
                             className="p-1 rounded-md text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 hover:bg-neutral-200/60 dark:hover:bg-neutral-700/60 transition-colors"
                           >
                             {isExpanded ? (
@@ -306,26 +304,31 @@ export const Sidebar: React.FC<SidebarProps> = ({
                             selectedCategory === cat.id &&
                             selectedSubCategory === sub.id &&
                             !showFavoritesOnly;
-                          const subCount = getItemCountBySubCategory(cat.id, sub.id);
+                          const subCount = getItemCountBySubCategory(
+                            cat.id,
+                            sub.id,
+                          );
 
                           return (
                             <button
                               key={sub.id}
                               id={`sidebar-sub-${sub.id}`}
                               type="button"
-                              onClick={() => handleSubCategoryClick(cat.id, sub.id)}
+                              onClick={() =>
+                                handleSubCategoryClick(cat.id, sub.id)
+                              }
                               className={`w-full flex items-center justify-between px-2 py-1.5 rounded-lg text-xs transition-colors ${
                                 isSubSelected
-                                  ? 'bg-neutral-200/80 dark:bg-neutral-700/60 text-neutral-900 dark:text-neutral-100 font-semibold'
-                                  : 'text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100/70 dark:hover:bg-neutral-800 hover:text-neutral-800 dark:hover:text-neutral-200'
+                                  ? "bg-neutral-200/80 dark:bg-neutral-700/60 text-neutral-900 dark:text-neutral-100 font-semibold"
+                                  : "text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100/70 dark:hover:bg-neutral-800 hover:text-neutral-800 dark:hover:text-neutral-200"
                               }`}
                             >
                               <div className="flex items-center gap-2 truncate">
                                 <span
                                   className={`w-1.5 h-1.5 rounded-full ${
                                     isSubSelected
-                                      ? 'bg-neutral-900 dark:bg-neutral-100'
-                                      : 'bg-neutral-300 dark:bg-neutral-700'
+                                      ? "bg-neutral-900 dark:bg-neutral-100"
+                                      : "bg-neutral-300 dark:bg-neutral-700"
                                   }`}
                                 />
                                 <span className="truncate">{sub.name}</span>

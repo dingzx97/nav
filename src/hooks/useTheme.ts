@@ -1,62 +1,76 @@
-import { useEffect, useState } from 'react';
-import { ThemeMode } from '../types';
+import { useEffect, useState } from "react";
 
-const STORAGE_KEY = 'devnav_theme_preference';
+import type { ThemeMode } from "../types";
+
+const STORAGE_KEY = "theme";
+const DEFAULT_THEME: ThemeMode = "system";
+
+const isThemeMode = (value: string | null): value is ThemeMode =>
+  value === "light" || value === "dark" || value === "system";
+
+const getSystemDarkMode = () => {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+};
 
 export function useTheme() {
   const [theme, setTheme] = useState<ThemeMode>(() => {
-    if (typeof window === 'undefined') return 'system';
-    const saved = localStorage.getItem(STORAGE_KEY) as ThemeMode | null;
-    return saved || 'system';
+    if (typeof window === "undefined") return DEFAULT_THEME;
+
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return isThemeMode(saved) ? saved : DEFAULT_THEME;
   });
 
-  const [resolvedDark, setResolvedDark] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return false;
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const saved = localStorage.getItem(STORAGE_KEY) as ThemeMode | null;
-    if (saved === 'dark') return true;
-    if (saved === 'light') return false;
-    return prefersDark;
-  });
+  const [resolvedDark, setResolvedDark] = useState<boolean>(() =>
+    theme === "dark" ? true : theme === "light" ? false : getSystemDarkMode(),
+  );
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
     const root = document.documentElement;
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
     const applyTheme = () => {
-      let isDark = false;
-      if (theme === 'dark') {
-        isDark = true;
-      } else if (theme === 'light') {
-        isDark = false;
-      } else {
-        isDark = mediaQuery.matches;
-      }
-
+      const isDark =
+        theme === "dark"
+          ? true
+          : theme === "light"
+            ? false
+            : mediaQuery.matches;
       setResolvedDark(isDark);
-      if (isDark) {
-        root.classList.add('dark');
-      } else {
-        root.classList.remove('dark');
-      }
+      root.classList.toggle("dark", isDark);
     };
 
     applyTheme();
-    localStorage.setItem(STORAGE_KEY, theme);
+
+    try {
+      localStorage.setItem(STORAGE_KEY, theme);
+    } catch {
+      // Ignore storage quota or privacy errors.
+    }
 
     const handleChange = () => {
-      if (theme === 'system') {
+      if (theme === "system") {
         applyTheme();
       }
     };
 
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", handleChange);
+      return () => mediaQuery.removeEventListener("change", handleChange);
+    }
+
+    mediaQuery.addListener(handleChange);
+    return () => mediaQuery.removeListener(handleChange);
   }, [theme]);
 
   const toggleTheme = () => {
-    // Quick toggle between light & dark, or cycle
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+    setTheme((prev) => {
+      if (prev === "dark") return "light";
+      if (prev === "light") return "system";
+      return "dark";
+    });
   };
 
   return { theme, setTheme, resolvedDark, toggleTheme };

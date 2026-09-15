@@ -1,8 +1,11 @@
-import React, { useRef, useEffect } from 'react';
-import { Search, X, Plus, Star, Layers } from 'lucide-react';
-import { ThemeToggle } from './ThemeToggle';
-import { ThemeMode } from '../types';
-import { CATEGORIES } from '../data/links';
+import React, { useRef, useEffect } from "react";
+import { Search, X, Plus, Star, Layers } from "lucide-react";
+
+import { ThemeToggle } from "./ThemeToggle";
+
+import { CATEGORIES } from "../data/links";
+
+import type { ThemeMode } from "../types";
 
 interface HeaderProps {
   searchQuery: string;
@@ -39,21 +42,24 @@ export const Header: React.FC<HeaderProps> = ({
     const handleKeyDown = (e: KeyboardEvent) => {
       // Shortcut '/' or 'Cmd/Ctrl + K'
       if (
-        (e.key === '/' && document.activeElement !== inputRef.current) ||
-        ((e.metaKey || e.ctrlKey) && e.key === 'k')
+        (e.key === "/" && document.activeElement !== inputRef.current) ||
+        ((e.metaKey || e.ctrlKey) && e.key === "k")
       ) {
         e.preventDefault();
         inputRef.current?.focus();
-      } else if (e.key === 'Escape' && document.activeElement === inputRef.current) {
+      } else if (
+        e.key === "Escape" &&
+        document.activeElement === inputRef.current
+      ) {
         inputRef.current?.blur();
         if (searchQuery) {
-          onSearchChange('');
+          onSearchChange("");
         }
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [searchQuery, onSearchChange]);
 
   return (
@@ -71,12 +77,12 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={() => {
                 onSelectCategory(null);
                 if (showFavoritesOnly) onToggleFavoritesOnly();
-                if (searchQuery) onSearchChange('');
+                if (searchQuery) onSearchChange("");
               }}
               className="flex items-center gap-2.5 text-left group"
             >
               <div className="w-8 h-8 rounded-lg bg-neutral-900 dark:bg-neutral-100 flex items-center justify-center text-white dark:text-neutral-900 font-mono font-bold text-sm shadow-xs transition-transform group-hover:scale-105">
-                {'</>'}
+                {"</>"}
               </div>
               <div className="hidden sm:block">
                 <div className="flex items-center gap-1.5">
@@ -88,7 +94,7 @@ export const Header: React.FC<HeaderProps> = ({
                   </span>
                 </div>
                 <p className="text-[11px] text-neutral-500 dark:text-neutral-400 -mt-0.5">
-                  开发工具与技术文档导航
+                  Developer tools and documentation
                 </p>
               </div>
             </button>
@@ -106,15 +112,15 @@ export const Header: React.FC<HeaderProps> = ({
                 type="text"
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
-                placeholder="搜索工具、文档或标签 (快捷键 / 或 ⌘K)..."
+                placeholder="Search tools, docs, or tags (press / or ⌘K)..."
                 className="w-full pl-9 pr-14 py-2 text-sm bg-neutral-100/80 dark:bg-neutral-900 border border-transparent dark:border-neutral-800 rounded-xl focus:outline-hidden focus:border-neutral-300 dark:focus:border-neutral-700 focus:bg-white dark:focus:bg-neutral-900 text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500 transition-all"
               />
               <div className="absolute inset-y-0 right-0 pr-2.5 flex items-center gap-1">
                 {searchQuery ? (
                   <button
                     type="button"
-                    onClick={() => onSearchChange('')}
-                    title="清除搜索"
+                    onClick={() => onSearchChange("")}
+                    title="Clear search"
                     className="p-1 rounded-md text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-800"
                   >
                     <X className="w-3.5 h-3.5" />
@@ -134,18 +140,18 @@ export const Header: React.FC<HeaderProps> = ({
               id="add-link-header-btn"
               type="button"
               onClick={onOpenAddModal}
-              title="添加自定义链接"
+              title="Add custom link"
               className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 rounded-lg transition-colors shadow-xs"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>添加链接</span>
+              <span>Add link</span>
             </button>
 
             <button
               id="mobile-add-btn"
               type="button"
               onClick={onOpenAddModal}
-              title="添加自定义链接"
+              title="Add custom link"
               className="sm:hidden p-2 rounded-lg bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900"
             >
               <Plus className="w-4 h-4" />
@@ -170,17 +176,17 @@ export const Header: React.FC<HeaderProps> = ({
             }}
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors ${
               selectedCategory === null && !showFavoritesOnly
-                ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900'
-                : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-900'
+                ? "bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900"
+                : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-900"
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
-            <span>全部资源</span>
+            <span>All resources</span>
             <span
               className={`text-[11px] px-1.5 py-0.2 rounded-full ${
                 selectedCategory === null && !showFavoritesOnly
-                  ? 'bg-neutral-800 dark:bg-neutral-200 text-neutral-200 dark:text-neutral-800'
-                  : 'bg-neutral-200/70 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400'
+                  ? "bg-neutral-800 dark:bg-neutral-200 text-neutral-200 dark:text-neutral-800"
+                  : "bg-neutral-200/70 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400"
               }`}
             >
               {totalCount}
@@ -193,17 +199,19 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={onToggleFavoritesOnly}
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors ${
               showFavoritesOnly
-                ? 'bg-amber-500 text-white'
-                : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-900'
+                ? "bg-amber-500 text-white"
+                : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-900"
             }`}
           >
-            <Star className={`w-3.5 h-3.5 ${showFavoritesOnly ? 'fill-white' : ''}`} />
-            <span>我的收藏</span>
+            <Star
+              className={`w-3.5 h-3.5 ${showFavoritesOnly ? "fill-white" : ""}`}
+            />
+            <span>Favorites</span>
             <span
               className={`text-[11px] px-1.5 py-0.2 rounded-full ${
                 showFavoritesOnly
-                  ? 'bg-amber-600 text-white'
-                  : 'bg-neutral-200/70 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400'
+                  ? "bg-amber-600 text-white"
+                  : "bg-neutral-200/70 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400"
               }`}
             >
               {favoritesCount}
@@ -213,7 +221,8 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="w-px h-4 bg-neutral-200 dark:bg-neutral-800 mx-1 shrink-0" />
 
           {CATEGORIES.map((cat) => {
-            const isSelected = selectedCategory === cat.id && !showFavoritesOnly;
+            const isSelected =
+              selectedCategory === cat.id && !showFavoritesOnly;
             return (
               <button
                 key={cat.id}
@@ -225,8 +234,8 @@ export const Header: React.FC<HeaderProps> = ({
                 }}
                 className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors ${
                   isSelected
-                    ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900'
-                    : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-900'
+                    ? "bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900"
+                    : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-900"
                 }`}
               >
                 <span>{cat.name}</span>

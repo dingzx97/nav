@@ -1,26 +1,41 @@
-import React from 'react';
-import { Layout, Server, Database, Wrench, Cloud, Compass, Star, Folder } from 'lucide-react';
+import React from "react";
+import {
+  Layout,
+  Server,
+  Database,
+  Wrench,
+  Cloud,
+  Compass,
+  Star,
+  Folder,
+  Bitcoin,
+} from "lucide-react";
 
 interface CategoryIconProps {
   name: string;
   className?: string;
 }
 
-export const CategoryIcon: React.FC<CategoryIconProps> = ({ name, className = 'w-4 h-4' }) => {
+export const CategoryIcon: React.FC<CategoryIconProps> = ({
+  name,
+  className = "w-4 h-4",
+}) => {
   switch (name) {
-    case 'Layout':
+    case "Layout":
       return <Layout className={className} />;
-    case 'Server':
+    case "Server":
       return <Server className={className} />;
-    case 'Database':
+    case "Database":
       return <Database className={className} />;
-    case 'Wrench':
+    case "Wrench":
       return <Wrench className={className} />;
-    case 'Cloud':
+    case "Cloud":
       return <Cloud className={className} />;
-    case 'Compass':
+    case "Compass":
       return <Compass className={className} />;
-    case 'Star':
+    case "Coins":
+      return <Bitcoin className={className} />;
+    case "Star":
       return <Star className={className} />;
     default:
       return <Folder className={className} />;

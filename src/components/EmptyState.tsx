@@ -1,5 +1,5 @@
-import React from 'react';
-import { SearchX, Star, RotateCcw, ArrowLeft } from 'lucide-react';
+import React from "react";
+import { SearchX, Star, RotateCcw, ArrowLeft } from "lucide-react";
 
 interface EmptyStateProps {
   searchQuery?: string;
@@ -8,7 +8,7 @@ interface EmptyStateProps {
 }
 
 export const EmptyState: React.FC<EmptyStateProps> = ({
-  searchQuery = '',
+  searchQuery = "",
   isFavorites = false,
   onClear,
 }) => {
@@ -25,10 +25,10 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           <Star className="w-7 h-7" />
         </div>
         <h3 className="text-base font-semibold text-neutral-900 dark:text-neutral-100 mb-1.5">
-          暂无收藏书签
+          No favorites yet
         </h3>
         <p className="text-sm text-neutral-500 dark:text-neutral-400 max-w-md mb-6 leading-relaxed">
-          您还未收藏任何工具或技术文档。在浏览资源时，点击卡片右上角的星标按钮（★）即可快捷添加至此。
+          You have not saved any tools or documentation yet. Select the star on a card to add it here.
         </p>
         <button
           id="back-to-all-from-empty-fav"
@@ -37,7 +37,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           className="inline-flex items-center gap-2 px-4 py-2 text-xs font-medium bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 rounded-xl transition-all shadow-2xs"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>返回浏览全部资源</span>
+          <span>Browse all resources</span>
         </button>
       </div>
     );
@@ -54,10 +54,14 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           <SearchX className="w-6 h-6" />
         </div>
         <h3 className="text-base font-semibold text-neutral-800 dark:text-neutral-200 mb-1.5">
-          收藏中未找到匹配项
+          No matching favorites
         </h3>
         <p className="text-sm text-neutral-500 dark:text-neutral-400 max-w-sm mb-5 leading-relaxed">
-          在已收藏的书签中没有与 <span className="font-medium text-neutral-800 dark:text-neutral-200">"{searchQuery}"</span> 相关的结果。
+          No favorites match{" "}
+          <span className="font-medium text-neutral-800 dark:text-neutral-200">
+            "{searchQuery}"
+          </span>{" "}
+          .
         </p>
         <button
           id="clear-fav-search-btn"
@@ -66,7 +70,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg transition-colors"
         >
           <RotateCcw className="w-3.5 h-3.5" />
-          <span>清除搜索关键词</span>
+          <span>Clear search</span>
         </button>
       </div>
     );
@@ -82,10 +86,14 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
         <SearchX className="w-6 h-6" />
       </div>
       <h3 className="text-base font-semibold text-neutral-800 dark:text-neutral-200 mb-1.5">
-        未找到匹配的工具或文档
+        No matching tools or documentation
       </h3>
       <p className="text-sm text-neutral-500 dark:text-neutral-400 max-w-sm mb-5 leading-relaxed">
-        没有与 <span className="font-medium text-neutral-800 dark:text-neutral-200">"{searchQuery}"</span> 相关的结果，请尝试搜索其他关键字或重置筛选条件。
+        No results match{" "}
+        <span className="font-medium text-neutral-800 dark:text-neutral-200">
+          "{searchQuery}"
+        </span>{" "}
+        . Try another search or reset the filters.
       </p>
       <button
         id="clear-search-btn"
@@ -94,7 +102,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
         className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg transition-colors"
       >
         <RotateCcw className="w-3.5 h-3.5" />
-        <span>清除搜索关键词</span>
+        <span>Clear search</span>
       </button>
     </div>
   );

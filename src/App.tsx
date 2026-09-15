@@ -1,23 +1,29 @@
-import { useState, useMemo, useRef, useEffect } from 'react';
-import { CATEGORIES, NAV_ITEMS } from './data/links';
-import { NavItem } from './types';
-import { useTheme } from './hooks/useTheme';
-import { useBookmarks } from './hooks/useBookmarks';
-import { Sidebar } from './components/Sidebar';
-import { TopBar } from './components/TopBar';
-import { NavCard } from './components/NavCard';
-import { EmptyState } from './components/EmptyState';
-import { Footer } from './components/Footer';
-import { CategoryIcon } from './components/CategoryIcon';
-import { Sparkles, Star, ArrowLeft } from 'lucide-react';
+import { useState, useMemo, useRef, useEffect } from "react";
+import { Sparkles, Star, ArrowLeft } from "lucide-react";
+
+import { Sidebar } from "./components/Sidebar";
+import { TopBar } from "./components/TopBar";
+import { NavCard } from "./components/NavCard";
+import { EmptyState } from "./components/EmptyState";
+import { Footer } from "./components/Footer";
+import { CategoryIcon } from "./components/CategoryIcon";
+
+import { useTheme } from "./hooks/useTheme";
+import { useBookmarks } from "./hooks/useBookmarks";
+
+import { CATEGORIES, NAV_ITEMS } from "./data/links";
+
+import type { NavItem } from "./types";
 
 export default function App() {
   const { theme, resolvedDark, setTheme } = useTheme();
   const { favorites, toggleFavorite, isFavorite } = useBookmarks();
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(null);
+  const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(
+    null,
+  );
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
@@ -33,9 +39,13 @@ export default function App() {
   };
 
   // Count items per subcategory
-  const getItemCountBySubCategory = (categoryId: string, subCategoryId: string) => {
+  const getItemCountBySubCategory = (
+    categoryId: string,
+    subCategoryId: string,
+  ) => {
     return allItems.filter(
-      (item) => item.category === categoryId && item.subCategory === subCategoryId
+      (item) =>
+        item.category === categoryId && item.subCategory === subCategoryId,
     ).length;
   };
 
@@ -43,12 +53,12 @@ export default function App() {
   const scrollToElement = (elementId: string) => {
     isClickScrollingRef.current = true;
     if (showFavoritesOnly) setShowFavoritesOnly(false);
-    if (searchQuery) setSearchQuery('');
+    if (searchQuery) setSearchQuery("");
 
     setTimeout(() => {
       const el = document.getElementById(elementId);
       if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
       }
       setTimeout(() => {
         isClickScrollingRef.current = false;
@@ -61,8 +71,8 @@ export default function App() {
       setSelectedCategory(null);
       setSelectedSubCategory(null);
       if (showFavoritesOnly) setShowFavoritesOnly(false);
-      if (searchQuery) setSearchQuery('');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (searchQuery) setSearchQuery("");
+      window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
     setSelectedCategory(catId);
@@ -87,7 +97,7 @@ export default function App() {
     const handleScroll = () => {
       if (isClickScrollingRef.current) return;
 
-      // When near the top, highlight "全部资源"
+      // When near the top, highlight all resources
       if (window.scrollY < 160) {
         setSelectedCategory(null);
         setSelectedSubCategory(null);
@@ -108,7 +118,8 @@ export default function App() {
         if (lastCat) {
           currentCat = lastCat.id;
           if (lastCat.subcategories && lastCat.subcategories.length > 0) {
-            currentSub = lastCat.subcategories[lastCat.subcategories.length - 1].id;
+            currentSub =
+              lastCat.subcategories[lastCat.subcategories.length - 1].id;
           }
         }
       } else {
@@ -141,8 +152,8 @@ export default function App() {
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [searchQuery, showFavoritesOnly]);
 
   // Filter items when searching or viewing favorites
@@ -168,13 +179,11 @@ export default function App() {
           (cat) =>
             cat.id === item.category &&
             (cat.name.toLowerCase().includes(q) ||
-              cat.nameEn.toLowerCase().includes(q) ||
               cat.subcategories.some(
                 (sub) =>
                   sub.id === item.subCategory &&
-                  (sub.name.toLowerCase().includes(q) ||
-                    sub.nameEn.toLowerCase().includes(q))
-              ))
+                  sub.name.toLowerCase().includes(q),
+              )),
         );
         return titleMatch || descMatch || urlMatch || tagMatch || categoryMatch;
       });
@@ -183,7 +192,7 @@ export default function App() {
     return list;
   }, [allItems, showFavoritesOnly, searchQuery, favorites]);
 
-  // Group all items by category and subcategories for the complete "全部资源" layout
+  // Group all items by category and subcategories for the complete all-resources layout
   const categorizedGroups = useMemo(() => {
     if (showFavoritesOnly || searchQuery.trim()) {
       return null;
@@ -203,7 +212,7 @@ export default function App() {
       // Items that don't belong to any known subcategory
       const knownSubIds = new Set(cat.subcategories.map((s) => s.id));
       const unclassifiedItems = catItems.filter(
-        (item) => !item.subCategory || !knownSubIds.has(item.subCategory)
+        (item) => !item.subCategory || !knownSubIds.has(item.subCategory),
       );
 
       return {
@@ -216,11 +225,11 @@ export default function App() {
   }, [allItems, showFavoritesOnly, searchQuery]);
 
   const resetFilters = () => {
-    setSearchQuery('');
+    setSearchQuery("");
     setSelectedCategory(null);
     setSelectedSubCategory(null);
     setShowFavoritesOnly(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -236,7 +245,7 @@ export default function App() {
         showFavoritesOnly={showFavoritesOnly}
         onToggleFavoritesOnly={() => {
           setShowFavoritesOnly((prev) => !prev);
-          if (searchQuery) setSearchQuery('');
+          if (searchQuery) setSearchQuery("");
         }}
         favoritesCount={favorites.length}
         totalCount={allItems.length}
@@ -261,106 +270,109 @@ export default function App() {
           {/* Primary View: ALL Resources with Subcategories inside each Category */}
           {categorizedGroups ? (
             <div className="space-y-16">
-              {categorizedGroups.map(({ category, items, subGroups, unclassifiedItems }) => (
-                <section
-                  key={category.id}
-                  id={`section-${category.id}`}
-                  className="scroll-mt-24 space-y-7"
-                >
-                  {/* Category Level Header without right-side subcategory buttons */}
-                  <div className="flex items-center gap-3 pb-3.5 border-b border-neutral-200/80 dark:border-neutral-800/80">
-                    <div className="p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 shadow-2xs">
-                      <CategoryIcon name={category.iconName} className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2.5">
-                        <h2 className="text-base sm:text-lg font-bold text-neutral-900 dark:text-neutral-100">
-                          {category.name}
-                        </h2>
-                        <span className="text-xs text-neutral-400 dark:text-neutral-500 font-mono">
-                          {category.nameEn}
-                        </span>
-                        <span className="text-[11px] px-2 py-0.2 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 font-mono">
-                          {items.length}
-                        </span>
+              {categorizedGroups.map(
+                ({ category, items, subGroups, unclassifiedItems }) => (
+                  <section
+                    key={category.id}
+                    id={`section-${category.id}`}
+                    className="scroll-mt-24 space-y-7"
+                  >
+                    {/* Category Level Header without right-side subcategory buttons */}
+                    <div className="flex items-center gap-3 pb-3.5 border-b border-neutral-200/80 dark:border-neutral-800/80">
+                      <div className="p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 shadow-2xs">
+                        <CategoryIcon
+                          name={category.iconName}
+                          className="w-5 h-5"
+                        />
                       </div>
-                      <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
-                        {category.description}
-                      </p>
+                      <div>
+                        <div className="flex items-center gap-2.5">
+                          <h2 className="text-base sm:text-lg font-bold text-neutral-900 dark:text-neutral-100">
+                            {category.name}
+                          </h2>
+                          <span className="text-xs text-neutral-400 dark:text-neutral-500 font-mono">
+                          </span>
+                          <span className="text-[11px] px-2 py-0.2 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 font-mono">
+                            {items.length}
+                          </span>
+                        </div>
+                        <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
+                          {category.description}
+                        </p>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Subcategories rendered in the clean subcategory style */}
-                  <div className="space-y-8 pl-0.5 sm:pl-1">
-                    {subGroups.map(({ subCategory, items: subItems }) => (
-                      <div
-                        key={subCategory.id}
-                        id={`section-sub-${subCategory.id}`}
-                        className="space-y-3 scroll-mt-24"
-                      >
-                        {/* Subcategory Header */}
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-neutral-900 dark:bg-neutral-100" />
-                            <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                              {subCategory.name}
-                            </h3>
+                    {/* Subcategories rendered in the clean subcategory style */}
+                    <div className="space-y-8 pl-0.5 sm:pl-1">
+                      {subGroups.map(({ subCategory, items: subItems }) => (
+                        <div
+                          key={subCategory.id}
+                          id={`section-sub-${subCategory.id}`}
+                          className="space-y-3 scroll-mt-24"
+                        >
+                          {/* Subcategory Header */}
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <span className="w-2 h-2 rounded-full bg-neutral-900 dark:bg-neutral-100" />
+                              <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                                {subCategory.name}
+                              </h3>
+                              <span className="text-xs text-neutral-400 dark:text-neutral-500 font-mono">
+                              </span>
+                            </div>
                             <span className="text-xs text-neutral-400 dark:text-neutral-500 font-mono">
-                              {subCategory.nameEn}
+                              {subItems.length} resources
                             </span>
                           </div>
-                          <span className="text-xs text-neutral-400 dark:text-neutral-500 font-mono">
-                            {subItems.length} 个资源
-                          </span>
-                        </div>
 
-                        {/* Cards Grid */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
-                          {subItems.map((item) => (
-                            <NavCard
-                              key={item.id}
-                              item={item}
-                              isFavorite={isFavorite(item.id)}
-                              onToggleFavorite={toggleFavorite}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-
-                    {/* Unclassified links under this category */}
-                    {unclassifiedItems.length > 0 && (
-                      <div
-                        id={`section-other-${category.id}`}
-                        className="space-y-3 scroll-mt-24"
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-neutral-400 dark:bg-neutral-600" />
-                            <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                              其他资源
-                            </h3>
+                          {/* Cards Grid */}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+                            {subItems.map((item) => (
+                              <NavCard
+                                key={item.id}
+                                item={item}
+                                isFavorite={isFavorite(item.id)}
+                                onToggleFavorite={toggleFavorite}
+                              />
+                            ))}
                           </div>
-                          <span className="text-xs text-neutral-400 dark:text-neutral-500 font-mono">
-                            {unclassifiedItems.length} 个资源
-                          </span>
                         </div>
+                      ))}
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
-                          {unclassifiedItems.map((item) => (
-                            <NavCard
-                              key={item.id}
-                              item={item}
-                              isFavorite={isFavorite(item.id)}
-                              onToggleFavorite={toggleFavorite}
-                            />
-                          ))}
+                      {/* Unclassified links under this category */}
+                      {unclassifiedItems.length > 0 && (
+                        <div
+                          id={`section-other-${category.id}`}
+                          className="space-y-3 scroll-mt-24"
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <span className="w-2 h-2 rounded-full bg-neutral-400 dark:bg-neutral-600" />
+                              <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                                Other resources
+                              </h3>
+                            </div>
+                            <span className="text-xs text-neutral-400 dark:text-neutral-500 font-mono">
+                              {unclassifiedItems.length} resources
+                            </span>
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+                            {unclassifiedItems.map((item) => (
+                              <NavCard
+                                key={item.id}
+                                item={item}
+                                isFavorite={isFavorite(item.id)}
+                                onToggleFavorite={toggleFavorite}
+                              />
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    )}
-                  </div>
-                </section>
-              ))}
+                      )}
+                    </div>
+                  </section>
+                ),
+              )}
             </div>
           ) : (
             /* Search Results or Favorites View */
@@ -374,10 +386,10 @@ export default function App() {
                       </div>
                       <div>
                         <h2 className="text-base font-semibold text-neutral-900 dark:text-neutral-100">
-                          我的收藏书签
+                          My bookmarks
                         </h2>
                         <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                          您在本地标记为星标的常用工具与文档
+                          Tools and docs you marked as favorites locally
                         </p>
                       </div>
                     </div>
@@ -388,16 +400,16 @@ export default function App() {
                       </div>
                       <div>
                         <h2 className="text-base font-semibold text-neutral-900 dark:text-neutral-100">
-                          搜索结果
+                          Search results
                         </h2>
                         <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                          包含关键字 "{searchQuery}" 的工具与文档
+                          Tools and docs matching "{searchQuery}"
                         </p>
                       </div>
                     </div>
                   )}
                   <span className="text-xs px-2 py-0.5 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 font-mono">
-                    {filteredItems.length} 个项目
+                    {filteredItems.length} items
                   </span>
                 </div>
 
@@ -407,7 +419,7 @@ export default function App() {
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg transition-colors"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
-                  <span>返回全部资源</span>
+                  <span>Back to all resources</span>
                 </button>
               </div>
 
@@ -417,7 +429,7 @@ export default function App() {
                   isFavorites={showFavoritesOnly}
                   onClear={
                     showFavoritesOnly && searchQuery
-                      ? () => setSearchQuery('')
+                      ? () => setSearchQuery("")
                       : resetFilters
                   }
                 />
