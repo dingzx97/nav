@@ -14,6 +14,23 @@ export const CATEGORIES: Category[] = [
       { id: "wt-ad", name: "Analytics & Data" },
     ],
   },
+  {
+    id: "cs",
+    name: "Cloud Service",
+    description: "Cloud Computing, IP, Domain, CDN, and more",
+    iconName: "Cloud",
+    subcategories: [
+      { id: "cs-csp", name: "Cloud Service Providers" },
+      { id: "cs-vps", name: "VPS" },
+    ],
+  },
+  {
+    id: "a",
+    name: "Anonymous",
+    description: "Anonymous",
+    iconName: "EyeDashed",
+    subcategories: [{ id: "a-at", name: "Tools" }],
+  },
   // {
   //   id: "frontend",
   //   name: "Frontend",
@@ -352,6 +369,66 @@ export const NAV_ITEMS: NavItem[] = [
     tags: ["Analytics", "Blockchains", "Data"],
   },
 
+  // ----- Web3 & Trading -----
+
+  // Blockchain & Explorer
+  {
+    id: "www.cloudflare.com",
+    title: "Cloudflare",
+    description:
+      "Welcome to Cloudflare - Powering the next generation of applications",
+    url: "https://www.cloudflare.com",
+    category: "cs",
+    subCategory: "cs-csp",
+    tags: ["Domain", "CDN", "Edge", "Storage"],
+  },
+  {
+    id: "aws.amazon.com",
+    title: "AWS",
+    description:
+      "Amazon Web Services offers reliable, scalable, and inexpensive cloud computing services. Free to join, pay only for what you use.",
+    url: "https://aws.amazon.com",
+    category: "cs",
+    subCategory: "cs-csp",
+    tags: ["Cloud Computing", "Storage", "Edge"],
+    featured: true,
+  },
+
+  // VPS
+  {
+    id: "lowendtalk.com",
+    title: "LowEndTalk",
+    description:
+      "LowEndTalk is a leading community forum for hosting professionals and enthusiasts, with real world discussions, provider reviews, industry news, and uncensored opinions on VPS, cloud, and dedicated servers.",
+    url: "https://lowendtalk.com",
+    category: "cs",
+    subCategory: "cs-vps",
+    tags: ["VPS", "Community"],
+  },
+  {
+    id: "www.racknerd.com",
+    title: "RackNerd",
+    description:
+      "RackNerd - Global Dedicated Servers. Introducing Infrastructure Stability",
+    url: "https://www.racknerd.com",
+    category: "cs",
+    subCategory: "cs-vps",
+    tags: ["VPS"],
+  },
+
+  // ----- Anonymous -----
+
+  // Anonymous Tools
+  {
+    id: "www.torproject.org",
+    title: "Tor",
+    description:
+      "Welcome to Cloudflare - Powering the next generation of applications",
+    url: "https://www.torproject.org",
+    category: "a",
+    subCategory: "a-at",
+    tags: ["Anonymous", "Browser"],
+  },
   // // --- Frontend ---
   // {
   //   id: "fe-react",

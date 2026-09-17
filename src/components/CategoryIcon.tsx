@@ -9,6 +9,7 @@ import {
   Star,
   Folder,
   Bitcoin,
+  EyeDashed,
 } from "lucide-react";
 
 interface CategoryIconProps {
@@ -37,6 +38,8 @@ export const CategoryIcon: React.FC<CategoryIconProps> = ({
       return <Bitcoin className={className} />;
     case "Star":
       return <Star className={className} />;
+    case "EyeDashed":
+      return <EyeDashed className={className} />;
     default:
       return <Folder className={className} />;
   }
