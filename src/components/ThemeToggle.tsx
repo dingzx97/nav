@@ -1,12 +1,12 @@
-import React from "react";
-import { Sun, Moon, Monitor } from "lucide-react";
+import React from "react"
+import { Sun, Moon, Monitor } from "lucide-react"
 
-import type { ThemeMode } from "../types";
+import type { ThemeMode } from "../types"
 
 interface ThemeToggleProps {
-  theme: ThemeMode;
-  resolvedDark: boolean;
-  onThemeChange: (theme: ThemeMode) => void;
+  theme: ThemeMode
+  resolvedDark: boolean
+  onThemeChange: (theme: ThemeMode) => void
 }
 
 export const ThemeToggle: React.FC<ThemeToggleProps> = ({
@@ -14,7 +14,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
   resolvedDark,
   onThemeChange,
 }) => {
-  const systemModeLabel = resolvedDark ? "dark" : "light";
+  const systemModeLabel = resolvedDark ? "dark" : "light"
 
   return (
     <div
@@ -55,7 +55,9 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
         id="theme-btn-system"
         type="button"
         title={
-          theme === "system" ? `Follow system (${systemModeLabel})` : "Follow system"
+          theme === "system"
+            ? `Follow system (${systemModeLabel})`
+            : "Follow system"
         }
         aria-pressed={theme === "system"}
         onClick={() => onThemeChange("system")}
@@ -68,5 +70,5 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
         <Monitor className="w-3.5 h-3.5" />
       </button>
     </div>
-  );
-};
+  )
+}

@@ -1,17 +1,17 @@
-import React, { useRef, useEffect } from "react";
-import { Search, X, Menu } from "lucide-react";
+import React, { useRef, useEffect } from "react"
+import { Search, X, Menu } from "lucide-react"
 
-import { ThemeToggle } from "./ThemeToggle";
+import { ThemeToggle } from "./ThemeToggle"
 
-import type { ThemeMode } from "../types";
+import type { ThemeMode } from "../types"
 
 interface TopBarProps {
-  onOpenMobileMenu: () => void;
-  searchQuery: string;
-  onSearchChange: (query: string) => void;
-  theme: ThemeMode;
-  resolvedDark: boolean;
-  onThemeChange: (theme: ThemeMode) => void;
+  onOpenMobileMenu: () => void
+  searchQuery: string
+  onSearchChange: (query: string) => void
+  theme: ThemeMode
+  resolvedDark: boolean
+  onThemeChange: (theme: ThemeMode) => void
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
@@ -22,7 +22,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   resolvedDark,
   onThemeChange,
 }) => {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -30,22 +30,22 @@ export const TopBar: React.FC<TopBarProps> = ({
         (e.key === "/" && document.activeElement !== inputRef.current) ||
         ((e.metaKey || e.ctrlKey) && e.key === "k")
       ) {
-        e.preventDefault();
-        inputRef.current?.focus();
+        e.preventDefault()
+        inputRef.current?.focus()
       } else if (
         e.key === "Escape" &&
         document.activeElement === inputRef.current
       ) {
-        inputRef.current?.blur();
+        inputRef.current?.blur()
         if (searchQuery) {
-          onSearchChange("");
+          onSearchChange("")
         }
       }
-    };
+    }
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [searchQuery, onSearchChange]);
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [searchQuery, onSearchChange])
 
   return (
     <header
@@ -77,7 +77,7 @@ export const TopBar: React.FC<TopBarProps> = ({
               ref={inputRef}
               type="text"
               value={searchQuery}
-              onChange={(e) => onSearchChange(e.target.value)}
+              onChange={e => onSearchChange(e.target.value)}
               placeholder="Search tools, docs, categories, or tags (press / or ⌘K)..."
               className="w-full pl-9 pr-14 py-2 text-sm bg-neutral-100 dark:bg-neutral-900 border border-transparent dark:border-neutral-800 rounded-xl focus:outline-hidden focus:border-neutral-300 dark:focus:border-neutral-700 focus:bg-white dark:focus:bg-neutral-900 text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500 transition-all"
             />
@@ -110,5 +110,5 @@ export const TopBar: React.FC<TopBarProps> = ({
         </div>
       </div>
     </header>
-  );
-};
+  )
+}

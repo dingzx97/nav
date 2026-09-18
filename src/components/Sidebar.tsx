@@ -1,31 +1,29 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Layers, Star, X, ChevronDown, ChevronRight } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react"
+import { Layers, Star, X, ChevronDown, ChevronRight } from "lucide-react"
 
-import { CategoryIcon } from "./CategoryIcon";
+import { CATEGORIES } from "../data/links"
 
-import { CATEGORIES } from "../data/links";
-
-import type { Category } from "../types";
+import type { Category } from "../types"
 
 interface SidebarProps {
-  isOpenMobile: boolean;
-  onCloseMobile: () => void;
-  selectedCategory: string | null;
-  selectedSubCategory: string | null;
-  onSelectCategory: (categoryId: string | null) => void;
+  isOpenMobile: boolean
+  onCloseMobile: () => void
+  selectedCategory: string | null
+  selectedSubCategory: string | null
+  onSelectCategory: (categoryTitle: string | null) => void
   onSelectSubCategory: (
-    categoryId: string,
-    subCategoryId: string | null,
-  ) => void;
-  showFavoritesOnly: boolean;
-  onToggleFavoritesOnly: () => void;
-  favoritesCount: number;
-  totalCount: number;
-  getItemCountByCategory: (categoryId: string) => number;
+    categoryTitle: string,
+    subCategoryTitle: string | null,
+  ) => void
+  showFavoritesOnly: boolean
+  onToggleFavoritesOnly: () => void
+  favoritesCount: number
+  totalCount: number
+  getItemCountByCategory: (categoryTitle: string) => number
   getItemCountBySubCategory: (
-    categoryId: string,
-    subCategoryId: string,
-  ) => number;
+    categoryTitle: string,
+    subCategoryTitle: string,
+  ) => number
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -42,14 +40,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
   getItemCountByCategory,
   getItemCountBySubCategory,
 }) => {
-  // Track which category accordion is expanded
   const [expandedCats, setExpandedCats] = useState<Record<string, boolean>>(
-    () => Object.fromEntries(CATEGORIES.map((cat) => [cat.id, true])),
-  );
+    () => Object.fromEntries(CATEGORIES.map(cat => [cat.title, true])),
+  )
 
-  const sidebarNavRef = useRef<HTMLElement>(null);
+  const sidebarNavRef = useRef<HTMLElement>(null)
 
-  // Keep sidebar view in sync with the active category/subcategory
   useEffect(() => {
     if (!selectedCategory || showFavoritesOnly) {
       if (
@@ -57,63 +53,62 @@ export const Sidebar: React.FC<SidebarProps> = ({
         !showFavoritesOnly &&
         sidebarNavRef.current
       ) {
-        sidebarNavRef.current.scrollTo({ top: 0, behavior: "smooth" });
+        sidebarNavRef.current.scrollTo({ top: 0, behavior: "smooth" })
       }
-      return;
+      return
     }
 
     const targetId = selectedSubCategory
       ? `sidebar-sub-${selectedSubCategory}`
-      : `sidebar-cat-${selectedCategory}`;
+      : `sidebar-cat-${selectedCategory}`
 
     const timer = setTimeout(() => {
-      const targetEl = document.getElementById(targetId);
+      const targetEl = document.getElementById(targetId)
       if (targetEl) {
         targetEl.scrollIntoView({
           behavior: "smooth",
           block: "nearest",
-        });
+        })
       }
-    }, 60);
+    }, 60)
 
-    return () => clearTimeout(timer);
-  }, [selectedCategory, selectedSubCategory, showFavoritesOnly]);
+    return () => clearTimeout(timer)
+  }, [selectedCategory, selectedSubCategory, showFavoritesOnly])
 
-  const toggleAccordion = (catId: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setExpandedCats((prev) => ({
+  const toggleAccordion = (catTitle: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setExpandedCats(prev => ({
       ...prev,
-      [catId]: !prev[catId],
-    }));
-  };
+      [catTitle]: !prev[catTitle],
+    }))
+  }
 
   const handleSelectAll = () => {
-    if (showFavoritesOnly) onToggleFavoritesOnly();
-    onSelectCategory(null);
-    onCloseMobile();
-  };
+    if (showFavoritesOnly) onToggleFavoritesOnly()
+    onSelectCategory(null)
+    onCloseMobile()
+  }
 
   const handleFavoritesClick = () => {
-    onToggleFavoritesOnly();
-    onCloseMobile();
-  };
+    onToggleFavoritesOnly()
+    onCloseMobile()
+  }
 
-  const handleCategoryClick = (catId: string) => {
-    if (showFavoritesOnly) onToggleFavoritesOnly();
-    onSelectSubCategory(catId, null);
-    setExpandedCats((prev) => ({ ...prev, [catId]: true }));
-    onCloseMobile();
-  };
+  const handleCategoryClick = (catTitle: string) => {
+    if (showFavoritesOnly) onToggleFavoritesOnly()
+    onSelectSubCategory(catTitle, null)
+    setExpandedCats(prev => ({ ...prev, [catTitle]: true }))
+    onCloseMobile()
+  }
 
-  const handleSubCategoryClick = (catId: string, subId: string) => {
-    if (showFavoritesOnly) onToggleFavoritesOnly();
-    onSelectSubCategory(catId, subId);
-    onCloseMobile();
-  };
+  const handleSubCategoryClick = (catTitle: string, subTitle: string) => {
+    if (showFavoritesOnly) onToggleFavoritesOnly()
+    onSelectSubCategory(catTitle, subTitle)
+    onCloseMobile()
+  }
 
   return (
     <>
-      {/* Mobile Backdrop Overlay */}
       {isOpenMobile && (
         <div
           id="sidebar-mobile-backdrop"
@@ -122,14 +117,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
         />
       )}
 
-      {/* Sidebar Container */}
       <aside
         id="app-sidebar"
         className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-white dark:bg-neutral-900 border-r border-neutral-200/80 dark:border-neutral-800 flex flex-col transition-all duration-300 ease-in-out lg:translate-x-0 ${
           isOpenMobile ? "translate-x-0 shadow-2xl" : "-translate-x-full"
         }`}
       >
-        {/* Brand Header */}
         <div className="h-16 px-4 flex items-center justify-between border-b border-neutral-200/80 dark:border-neutral-800 shrink-0">
           <button
             id="sidebar-logo-btn"
@@ -155,7 +148,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
           </button>
 
-          {/* Close button on mobile */}
           <button
             id="sidebar-close-mobile-btn"
             type="button"
@@ -166,12 +158,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </button>
         </div>
 
-        {/* Scrollable Navigation Items */}
         <nav
           ref={sidebarNavRef}
           className="flex-1 px-3 py-4 space-y-6 overflow-y-auto custom-scrollbar"
         >
-          {/* Main Navigation */}
           <div>
             <div className="px-2.5 mb-2 text-[11px] font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
               Overview
@@ -229,7 +219,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
           </div>
 
-          {/* Categories & Subcategories Tree Navigation */}
           <div>
             <div className="flex items-center justify-between px-2.5 mb-2">
               <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
@@ -240,18 +229,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div className="space-y-1.5">
               {CATEGORIES.map((cat: Category) => {
                 const isCatSelected =
-                  selectedCategory === cat.id && !showFavoritesOnly;
+                  selectedCategory === cat.title && !showFavoritesOnly
                 const isExpanded =
-                  !!expandedCats[cat.id] || selectedCategory === cat.id;
-                const catCount = getItemCountByCategory(cat.id);
+                  !!expandedCats[cat.title] || selectedCategory === cat.title
+                const catCount = getItemCountByCategory(cat.title)
                 const hasSubcategories =
-                  cat.subcategories && cat.subcategories.length > 0;
+                  !!cat.subcategories && cat.subcategories.length > 0
 
                 return (
-                  <div key={cat.id} className="space-y-0.5">
-                    {/* Main Category Row */}
+                  <div key={cat.title} className="space-y-0.5">
                     <div
-                      id={`sidebar-cat-${cat.id}`}
+                      id={`sidebar-cat-${cat.title}`}
                       className={`group flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-medium transition-all ${
                         isCatSelected
                           ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 font-semibold shadow-2xs"
@@ -260,18 +248,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     >
                       <button
                         type="button"
-                        onClick={() => handleCategoryClick(cat.id)}
+                        onClick={() => handleCategoryClick(cat.title)}
                         className="flex-1 flex items-center gap-2.5 text-left truncate"
                       >
-                        <CategoryIcon
-                          name={cat.iconName}
-                          className={`w-4 h-4 shrink-0 ${
-                            isCatSelected
-                              ? "text-neutral-900 dark:text-neutral-100"
-                              : "text-neutral-400 group-hover:text-neutral-600 dark:group-hover:text-neutral-300"
-                          }`}
-                        />
-                        <span className="truncate">{cat.name}</span>
+                        {cat.icon && (
+                          <cat.icon
+                            className={`w-4 h-4 shrink-0 ${
+                              isCatSelected
+                                ? "text-neutral-900 dark:text-neutral-100"
+                                : "text-neutral-400 group-hover:text-neutral-600 dark:group-hover:text-neutral-300"
+                            }`}
+                          />
+                        )}
+                        <span className="truncate">{cat.title}</span>
                       </button>
 
                       <div className="flex items-center gap-1.5 shrink-0">
@@ -282,8 +271,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         {hasSubcategories && (
                           <button
                             type="button"
-                            onClick={(e) => toggleAccordion(cat.id, e)}
-                            title={isExpanded ? "Collapse subcategories" : "Expand subcategories"}
+                            onClick={e => toggleAccordion(cat.title, e)}
+                            title={
+                              isExpanded
+                                ? "Collapse subcategories"
+                                : "Expand subcategories"
+                            }
                             className="p-1 rounded-md text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 hover:bg-neutral-200/60 dark:hover:bg-neutral-700/60 transition-colors"
                           >
                             {isExpanded ? (
@@ -296,26 +289,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       </div>
                     </div>
 
-                    {/* Subcategories Dropdown Items */}
                     {hasSubcategories && isExpanded && (
                       <div className="pl-6 pr-1 py-1 space-y-0.5 border-l-2 border-neutral-100 dark:border-neutral-800/80 ml-4 animate-in fade-in-50 duration-150">
-                        {cat.subcategories.map((sub) => {
+                        {(cat.subcategories ?? []).map(sub => {
                           const isSubSelected =
-                            selectedCategory === cat.id &&
-                            selectedSubCategory === sub.id &&
-                            !showFavoritesOnly;
+                            selectedCategory === cat.title &&
+                            selectedSubCategory === sub.title &&
+                            !showFavoritesOnly
                           const subCount = getItemCountBySubCategory(
-                            cat.id,
-                            sub.id,
-                          );
+                            cat.title,
+                            sub.title,
+                          )
 
                           return (
                             <button
-                              key={sub.id}
-                              id={`sidebar-sub-${sub.id}`}
+                              key={sub.title}
+                              id={`sidebar-sub-${sub.title}`}
                               type="button"
                               onClick={() =>
-                                handleSubCategoryClick(cat.id, sub.id)
+                                handleSubCategoryClick(cat.title, sub.title)
                               }
                               className={`w-full flex items-center justify-between px-2 py-1.5 rounded-lg text-xs transition-colors ${
                                 isSubSelected
@@ -331,23 +323,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
                                       : "bg-neutral-300 dark:bg-neutral-700"
                                   }`}
                                 />
-                                <span className="truncate">{sub.name}</span>
+                                <span className="truncate">{sub.title}</span>
                               </div>
                               <span className="text-[10px] text-neutral-400 dark:text-neutral-500 font-mono">
                                 {subCount}
                               </span>
                             </button>
-                          );
+                          )
                         })}
                       </div>
                     )}
                   </div>
-                );
+                )
               })}
             </div>
           </div>
         </nav>
       </aside>
     </>
-  );
-};
+  )
+}

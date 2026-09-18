@@ -1,8 +1,8 @@
-import React from 'react';
-import { Terminal, ShieldCheck } from 'lucide-react';
+import React from "react"
+import { Terminal, ShieldCheck } from "lucide-react"
 
 interface FooterProps {
-  totalLinks: number;
+  totalLinks: number
 }
 
 export const Footer: React.FC<FooterProps> = ({ totalLinks }) => {
@@ -22,12 +22,17 @@ export const Footer: React.FC<FooterProps> = ({ totalLinks }) => {
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
             <span>No tracking · Static frontend · Local preferences</span>
           </span>
-          <span className="hidden sm:inline text-neutral-300 dark:text-neutral-700">|</span>
+          <span className="hidden sm:inline text-neutral-300 dark:text-neutral-700">
+            |
+          </span>
           <span>
-            <strong className="font-medium text-neutral-700 dark:text-neutral-200">{totalLinks}</strong> curated resources
+            <strong className="font-medium text-neutral-700 dark:text-neutral-200">
+              {totalLinks}
+            </strong>{" "}
+            curated resources
           </span>
         </div>
       </div>
     </footer>
-  );
-};
+  )
+}

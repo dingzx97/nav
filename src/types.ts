@@ -1,28 +1,20 @@
-export type ThemeMode = 'light' | 'dark' | 'system';
+import type { LucideIcon } from "lucide-react"
 
-export interface SubCategory {
-  id: string;
-  name: string;
-  description?: string;
-}
+export type ThemeMode = "light" | "dark" | "system"
 
 export interface NavItem {
-  id: string;
-  title: string;
-  description: string;
-  url: string;
-  category: string;
-  subCategory?: string;
-  tags: string[];
-  iconName?: string;
-  featured?: boolean;
+  title: string
+  description: string
+  url: string
+  tags: string[]
+  icon?: LucideIcon
+  featured?: boolean
 }
 
 export interface Category {
-  id: string;
-  name: string;
-  description: string;
-  iconName: string;
-  subcategories: SubCategory[];
+  title: string
+  description: string
+  icon?: LucideIcon
+  items?: NavItem[]
+  subcategories?: Category[]
 }
-

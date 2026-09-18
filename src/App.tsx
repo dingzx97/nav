@@ -1,240 +1,284 @@
-import { useState, useMemo, useRef, useEffect } from "react";
-import { Sparkles, Star, ArrowLeft } from "lucide-react";
+import { useState, useMemo, useRef, useEffect } from "react"
+import { Sparkles, Star, ArrowLeft } from "lucide-react"
 
-import { Sidebar } from "./components/Sidebar";
-import { TopBar } from "./components/TopBar";
-import { NavCard } from "./components/NavCard";
-import { EmptyState } from "./components/EmptyState";
-import { Footer } from "./components/Footer";
-import { CategoryIcon } from "./components/CategoryIcon";
+import { Sidebar } from "./components/Sidebar"
+import { TopBar } from "./components/TopBar"
+import { NavCard } from "./components/NavCard"
+import { EmptyState } from "./components/EmptyState"
+import { Footer } from "./components/Footer"
 
-import { useTheme } from "./hooks/useTheme";
-import { useBookmarks } from "./hooks/useBookmarks";
+import { useTheme } from "./hooks/useTheme"
+import { useBookmarks } from "./hooks/useBookmarks"
 
-import { CATEGORIES, NAV_ITEMS } from "./data/links";
+import { CATEGORIES } from "./data/links"
+import { flattenCategoryTree } from "./lib/utils"
 
-import type { NavItem } from "./types";
+import type { Category, NavItem } from "./types"
+
+const getCategoryItemCount = (category: Category): number =>
+  (category.items ?? []).length +
+  (category.subcategories ?? []).reduce(
+    (count, subcategory) => count + getCategoryItemCount(subcategory),
+    0,
+  )
 
 export default function App() {
-  const { theme, resolvedDark, setTheme } = useTheme();
-  const { favorites, toggleFavorite, isFavorite } = useBookmarks();
+  const { theme, resolvedDark, setTheme } = useTheme()
+  const { favorites, toggleFavorite, isFavorite } = useBookmarks()
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(
     null,
-  );
-  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
-  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  )
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false)
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
 
-  // Ref to prevent intersection observer from interfering with smooth scroll clicks
-  const isClickScrollingRef = useRef(false);
+  const isClickScrollingRef = useRef(false)
 
-  // Default navigation items
-  const allItems: NavItem[] = NAV_ITEMS;
+  const allItems: NavItem[] = useMemo(() => flattenCategoryTree(CATEGORIES), [])
 
-  // Count items per category
-  const getItemCountByCategory = (categoryId: string) => {
-    return allItems.filter((item) => item.category === categoryId).length;
-  };
+  const itemLocationMap = useMemo(() => {
+    const map = new Map<
+      string,
+      { categoryTitle: string; subCategoryTitle?: string }
+    >()
 
-  // Count items per subcategory
+    const visitCategory = (
+      category: Category,
+      parentCategoryTitle?: string,
+    ) => {
+      for (const item of category.items ?? []) {
+        map.set(item.title, {
+          categoryTitle: parentCategoryTitle ?? category.title,
+        })
+      }
+
+      for (const subcategory of category.subcategories ?? []) {
+        for (const item of subcategory.items ?? []) {
+          map.set(item.title, {
+            categoryTitle: category.title,
+            subCategoryTitle: subcategory.title,
+          })
+        }
+
+        visitCategory(subcategory, category.title)
+      }
+    }
+
+    for (const category of CATEGORIES) {
+      visitCategory(category)
+    }
+
+    return map
+  }, [])
+
+  const getItemCountByCategory = (categoryTitle: string) => {
+    const category = CATEGORIES.find(item => item.title === categoryTitle)
+    return category ? getCategoryItemCount(category) : 0
+  }
+
   const getItemCountBySubCategory = (
-    categoryId: string,
-    subCategoryId: string,
+    categoryTitle: string,
+    subCategoryTitle: string,
   ) => {
-    return allItems.filter(
-      (item) =>
-        item.category === categoryId && item.subCategory === subCategoryId,
-    ).length;
-  };
+    const category = CATEGORIES.find(item => item.title === categoryTitle)
+    if (!category) return 0
 
-  // Smooth scroll jump to target element
+    const subcategory = (category.subcategories ?? []).find(
+      item => item.title === subCategoryTitle,
+    )
+
+    return subcategory ? getCategoryItemCount(subcategory) : 0
+  }
+
   const scrollToElement = (elementId: string) => {
-    isClickScrollingRef.current = true;
-    if (showFavoritesOnly) setShowFavoritesOnly(false);
-    if (searchQuery) setSearchQuery("");
+    isClickScrollingRef.current = true
+    if (showFavoritesOnly) setShowFavoritesOnly(false)
+    if (searchQuery) setSearchQuery("")
 
     setTimeout(() => {
-      const el = document.getElementById(elementId);
+      const el = document.getElementById(elementId)
       if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        el.scrollIntoView({ behavior: "smooth", block: "start" })
       }
       setTimeout(() => {
-        isClickScrollingRef.current = false;
-      }, 800);
-    }, 40);
-  };
+        isClickScrollingRef.current = false
+      }, 800)
+    }, 40)
+  }
 
-  const handleCategorySelect = (catId: string | null) => {
-    if (!catId) {
-      setSelectedCategory(null);
-      setSelectedSubCategory(null);
-      if (showFavoritesOnly) setShowFavoritesOnly(false);
-      if (searchQuery) setSearchQuery("");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
+  const handleCategorySelect = (catTitle: string | null) => {
+    if (!catTitle) {
+      setSelectedCategory(null)
+      setSelectedSubCategory(null)
+      if (showFavoritesOnly) setShowFavoritesOnly(false)
+      if (searchQuery) setSearchQuery("")
+      window.scrollTo({ top: 0, behavior: "smooth" })
+      return
     }
-    setSelectedCategory(catId);
-    setSelectedSubCategory(null);
-    scrollToElement(`section-${catId}`);
-  };
+    setSelectedCategory(catTitle)
+    setSelectedSubCategory(null)
+    scrollToElement(`section-${catTitle}`)
+  }
 
-  const handleSubCategorySelect = (catId: string, subId: string | null) => {
-    setSelectedCategory(catId);
-    setSelectedSubCategory(subId);
-    if (subId) {
-      scrollToElement(`section-sub-${subId}`);
+  const handleSubCategorySelect = (
+    catTitle: string,
+    subTitle: string | null,
+  ) => {
+    setSelectedCategory(catTitle)
+    setSelectedSubCategory(subTitle)
+    if (subTitle) {
+      scrollToElement(`section-sub-${subTitle}`)
     } else {
-      scrollToElement(`section-${catId}`);
+      scrollToElement(`section-${catTitle}`)
     }
-  };
+  }
 
-  // Scrollspy: automatically highlight current category / subcategory while scrolling
   useEffect(() => {
-    if (searchQuery || showFavoritesOnly) return;
+    if (searchQuery || showFavoritesOnly) return
 
     const handleScroll = () => {
-      if (isClickScrollingRef.current) return;
+      if (isClickScrollingRef.current) return
 
-      // When near the top, highlight all resources
       if (window.scrollY < 160) {
-        setSelectedCategory(null);
-        setSelectedSubCategory(null);
-        return;
+        setSelectedCategory(null)
+        setSelectedSubCategory(null)
+        return
       }
 
-      // Check which section is in view
-      let currentCat: string | null = null;
-      let currentSub: string | null = null;
+      let currentCat: string | null = null
+      let currentSub: string | null = null
 
-      // Check if user has scrolled near the bottom of the page
-      const scrollPosition = window.innerHeight + window.scrollY;
-      const documentHeight = document.documentElement.scrollHeight;
-      const isAtBottom = scrollPosition >= documentHeight - 120;
+      const scrollPosition = window.innerHeight + window.scrollY
+      const documentHeight = document.documentElement.scrollHeight
+      const isAtBottom = scrollPosition >= documentHeight - 120
 
       if (isAtBottom) {
-        const lastCat = CATEGORIES[CATEGORIES.length - 1];
+        const lastCat = CATEGORIES[CATEGORIES.length - 1]
         if (lastCat) {
-          currentCat = lastCat.id;
-          if (lastCat.subcategories && lastCat.subcategories.length > 0) {
-            currentSub =
-              lastCat.subcategories[lastCat.subcategories.length - 1].id;
+          currentCat = lastCat.title
+          const lastSubcategories = lastCat.subcategories ?? []
+          if (lastSubcategories.length > 0) {
+            currentSub = lastSubcategories[lastSubcategories.length - 1].title
           }
         }
       } else {
         for (const cat of CATEGORIES) {
-          const catEl = document.getElementById(`section-${cat.id}`);
+          const catEl = document.getElementById(`section-${cat.title}`)
           if (catEl) {
-            const rect = catEl.getBoundingClientRect();
+            const rect = catEl.getBoundingClientRect()
             if (rect.top <= 220 && rect.bottom > 100) {
-              currentCat = cat.id;
+              currentCat = cat.title
 
-              for (const sub of cat.subcategories) {
-                const subEl = document.getElementById(`section-sub-${sub.id}`);
+              for (const sub of cat.subcategories ?? []) {
+                const subEl = document.getElementById(
+                  `section-sub-${sub.title}`,
+                )
                 if (subEl) {
-                  const subRect = subEl.getBoundingClientRect();
+                  const subRect = subEl.getBoundingClientRect()
                   if (subRect.top <= 220 && subRect.bottom > 80) {
-                    currentSub = sub.id;
-                    break;
+                    currentSub = sub.title
+                    break
                   }
                 }
               }
-              break;
+              break
             }
           }
         }
       }
 
       if (currentCat) {
-        setSelectedCategory(currentCat);
-        setSelectedSubCategory(currentSub);
+        setSelectedCategory(currentCat)
+        setSelectedSubCategory(currentSub)
       }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [searchQuery, showFavoritesOnly]);
-
-  // Filter items when searching or viewing favorites
-  const filteredItems = useMemo(() => {
-    if (!showFavoritesOnly && !searchQuery.trim()) {
-      return allItems;
     }
 
-    let list = allItems;
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [searchQuery, showFavoritesOnly])
+
+  const filteredItems = useMemo(() => {
+    if (!showFavoritesOnly && !searchQuery.trim()) {
+      return allItems
+    }
+
+    let list = allItems
 
     if (showFavoritesOnly) {
-      list = list.filter((item) => favorites.includes(item.id));
+      list = list.filter(item => favorites.includes(item.title))
     }
 
     if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase().trim();
-      list = list.filter((item) => {
-        const titleMatch = item.title.toLowerCase().includes(q);
-        const descMatch = item.description.toLowerCase().includes(q);
-        const urlMatch = item.url.toLowerCase().includes(q);
-        const tagMatch = item.tags.some((tag) => tag.toLowerCase().includes(q));
-        const categoryMatch = CATEGORIES.some(
-          (cat) =>
-            cat.id === item.category &&
-            (cat.name.toLowerCase().includes(q) ||
-              cat.subcategories.some(
-                (sub) =>
-                  sub.id === item.subCategory &&
-                  sub.name.toLowerCase().includes(q),
-              )),
-        );
-        return titleMatch || descMatch || urlMatch || tagMatch || categoryMatch;
-      });
+      const q = searchQuery.toLowerCase().trim()
+      list = list.filter(item => {
+        const titleMatch = item.title.toLowerCase().includes(q)
+        const descMatch = item.description.toLowerCase().includes(q)
+        const urlMatch = item.url.toLowerCase().includes(q)
+        const tagMatch = item.tags.some(tag => tag.toLowerCase().includes(q))
+        const categoryInfo = itemLocationMap.get(item.title)
+        const categoryMatch =
+          categoryInfo &&
+          CATEGORIES.some(
+            cat =>
+              cat.title === categoryInfo.categoryTitle &&
+              (cat.title.toLowerCase().includes(q) ||
+                (cat.subcategories ?? []).some(
+                  sub =>
+                    sub.title === categoryInfo.subCategoryTitle &&
+                    sub.title.toLowerCase().includes(q),
+                )),
+          )
+
+        return (
+          titleMatch || descMatch || urlMatch || tagMatch || !!categoryMatch
+        )
+      })
     }
 
-    return list;
-  }, [allItems, showFavoritesOnly, searchQuery, favorites]);
+    return list
+  }, [allItems, showFavoritesOnly, searchQuery, favorites, itemLocationMap])
 
-  // Group all items by category and subcategories for the complete all-resources layout
   const categorizedGroups = useMemo(() => {
     if (showFavoritesOnly || searchQuery.trim()) {
-      return null;
+      return null
     }
 
-    return CATEGORIES.map((cat) => {
-      const catItems = allItems.filter((item) => item.category === cat.id);
-
-      // Subcategories with items
-      const subGroups = cat.subcategories
-        .map((sub) => ({
+    return CATEGORIES.map(cat => {
+      const subGroups = (cat.subcategories ?? [])
+        .map(sub => ({
           subCategory: sub,
-          items: catItems.filter((item) => item.subCategory === sub.id),
+          items: sub.items ?? [],
         }))
-        .filter((group) => group.items.length > 0);
+        .filter(group => group.items.length > 0)
 
-      // Items that don't belong to any known subcategory
-      const knownSubIds = new Set(cat.subcategories.map((s) => s.id));
-      const unclassifiedItems = catItems.filter(
-        (item) => !item.subCategory || !knownSubIds.has(item.subCategory),
-      );
+      const unclassifiedItems = (cat.items ?? []).filter(
+        item =>
+          !subGroups.some(group =>
+            group.items.some(gItem => gItem.title === item.title),
+          ),
+      )
 
       return {
         category: cat,
-        items: catItems,
+        items: cat.items ?? [],
         subGroups,
         unclassifiedItems,
-      };
-    }).filter((group) => group.items.length > 0);
-  }, [allItems, showFavoritesOnly, searchQuery]);
+      }
+    }).filter(group => group.items.length > 0 || group.subGroups.length > 0)
+  }, [showFavoritesOnly, searchQuery])
 
   const resetFilters = () => {
-    setSearchQuery("");
-    setSelectedCategory(null);
-    setSelectedSubCategory(null);
-    setShowFavoritesOnly(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+    setSearchQuery("")
+    setSelectedCategory(null)
+    setSelectedSubCategory(null)
+    setShowFavoritesOnly(false)
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
 
   return (
     <div className="min-h-screen flex bg-neutral-50 dark:bg-neutral-950 text-neutral-800 dark:text-neutral-100 transition-colors">
-      {/* Left Sidebar Navigation */}
       <Sidebar
         isOpenMobile={isMobileSidebarOpen}
         onCloseMobile={() => setIsMobileSidebarOpen(false)}
@@ -244,8 +288,8 @@ export default function App() {
         onSelectSubCategory={handleSubCategorySelect}
         showFavoritesOnly={showFavoritesOnly}
         onToggleFavoritesOnly={() => {
-          setShowFavoritesOnly((prev) => !prev);
-          if (searchQuery) setSearchQuery("");
+          setShowFavoritesOnly(prev => !prev)
+          if (searchQuery) setSearchQuery("")
         }}
         favoritesCount={favorites.length}
         totalCount={allItems.length}
@@ -253,9 +297,7 @@ export default function App() {
         getItemCountBySubCategory={getItemCountBySubCategory}
       />
 
-      {/* Main Content Area (Offset by left sidebar on desktop) */}
       <div className="flex-1 flex flex-col min-w-0 lg:pl-64">
-        {/* Top Bar for Search and Controls */}
         <TopBar
           onOpenMobileMenu={() => setIsMobileSidebarOpen(true)}
           searchQuery={searchQuery}
@@ -265,35 +307,28 @@ export default function App() {
           onThemeChange={setTheme}
         />
 
-        {/* Content Container */}
         <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-          {/* Primary View: ALL Resources with Subcategories inside each Category */}
           {categorizedGroups ? (
             <div className="space-y-16">
               {categorizedGroups.map(
-                ({ category, items, subGroups, unclassifiedItems }) => (
+                ({ category, subGroups, unclassifiedItems }) => (
                   <section
-                    key={category.id}
-                    id={`section-${category.id}`}
+                    key={category.title}
+                    id={`section-${category.title}`}
                     className="scroll-mt-24 space-y-7"
                   >
-                    {/* Category Level Header without right-side subcategory buttons */}
                     <div className="flex items-center gap-3 pb-3.5 border-b border-neutral-200/80 dark:border-neutral-800/80">
                       <div className="p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 shadow-2xs">
-                        <CategoryIcon
-                          name={category.iconName}
-                          className="w-5 h-5"
-                        />
+                        {category.icon && <category.icon className="" />}
                       </div>
                       <div>
                         <div className="flex items-center gap-2.5">
                           <h2 className="text-base sm:text-lg font-bold text-neutral-900 dark:text-neutral-100">
-                            {category.name}
+                            {category.title}
                           </h2>
-                          <span className="text-xs text-neutral-400 dark:text-neutral-500 font-mono">
-                          </span>
+                          <span className="text-xs text-neutral-400 dark:text-neutral-500 font-mono"></span>
                           <span className="text-[11px] px-2 py-0.2 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 font-mono">
-                            {items.length}
+                            {getCategoryItemCount(category)}
                           </span>
                         </div>
                         <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
@@ -302,36 +337,32 @@ export default function App() {
                       </div>
                     </div>
 
-                    {/* Subcategories rendered in the clean subcategory style */}
                     <div className="space-y-8 pl-0.5 sm:pl-1">
                       {subGroups.map(({ subCategory, items: subItems }) => (
                         <div
-                          key={subCategory.id}
-                          id={`section-sub-${subCategory.id}`}
+                          key={subCategory.title}
+                          id={`section-sub-${subCategory.title}`}
                           className="space-y-3 scroll-mt-24"
                         >
-                          {/* Subcategory Header */}
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                               <span className="w-2 h-2 rounded-full bg-neutral-900 dark:bg-neutral-100" />
                               <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                                {subCategory.name}
+                                {subCategory.title}
                               </h3>
-                              <span className="text-xs text-neutral-400 dark:text-neutral-500 font-mono">
-                              </span>
+                              <span className="text-xs text-neutral-400 dark:text-neutral-500 font-mono"></span>
                             </div>
                             <span className="text-xs text-neutral-400 dark:text-neutral-500 font-mono">
                               {subItems.length} resources
                             </span>
                           </div>
 
-                          {/* Cards Grid */}
                           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
-                            {subItems.map((item) => (
+                            {subItems.map(item => (
                               <NavCard
-                                key={item.id}
+                                key={item.title}
                                 item={item}
-                                isFavorite={isFavorite(item.id)}
+                                isFavorite={isFavorite(item.title)}
                                 onToggleFavorite={toggleFavorite}
                               />
                             ))}
@@ -339,10 +370,9 @@ export default function App() {
                         </div>
                       ))}
 
-                      {/* Unclassified links under this category */}
                       {unclassifiedItems.length > 0 && (
                         <div
-                          id={`section-other-${category.id}`}
+                          id={`section-other-${category.title}`}
                           className="space-y-3 scroll-mt-24"
                         >
                           <div className="flex items-center justify-between">
@@ -358,11 +388,11 @@ export default function App() {
                           </div>
 
                           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
-                            {unclassifiedItems.map((item) => (
+                            {unclassifiedItems.map(item => (
                               <NavCard
-                                key={item.id}
+                                key={item.title}
                                 item={item}
-                                isFavorite={isFavorite(item.id)}
+                                isFavorite={isFavorite(item.title)}
                                 onToggleFavorite={toggleFavorite}
                               />
                             ))}
@@ -375,7 +405,6 @@ export default function App() {
               )}
             </div>
           ) : (
-            /* Search Results or Favorites View */
             <div>
               <div className="flex items-center justify-between mb-6 pb-3 border-b border-neutral-200/60 dark:border-neutral-850">
                 <div className="flex items-center gap-3">
@@ -435,11 +464,11 @@ export default function App() {
                 />
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
-                  {filteredItems.map((item) => (
+                  {filteredItems.map(item => (
                     <NavCard
-                      key={item.id}
+                      key={item.title}
                       item={item}
-                      isFavorite={isFavorite(item.id)}
+                      isFavorite={isFavorite(item.title)}
                       onToggleFavorite={toggleFavorite}
                     />
                   ))}
@@ -449,9 +478,8 @@ export default function App() {
           )}
         </main>
 
-        {/* Footer */}
         <Footer totalLinks={allItems.length} />
       </div>
     </div>
-  );
+  )
 }

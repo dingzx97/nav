@@ -1,8 +1,8 @@
-import react, { reactCompilerPreset } from "@vitejs/plugin-react";
-import babel from "@rolldown/plugin-babel";
-import { defineConfig } from "vite";
-import path from "path";
-import tailwindcss from "@tailwindcss/vite";
+import react, { reactCompilerPreset } from "@vitejs/plugin-react"
+import babel from "@rolldown/plugin-babel"
+import { defineConfig } from "vite"
+import path from "path"
+import tailwindcss from "@tailwindcss/vite"
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -23,4 +23,4 @@ export default defineConfig({
     // Disable file watching when DISABLE_HMR is true to save CPU during agent edits.
     watch: process.env.DISABLE_HMR === "true" ? null : {},
   },
-});
+})

@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import { ExternalLink, Star, Copy, Check, Globe, Sparkles } from "lucide-react";
+import React, { useState } from "react"
+import { ExternalLink, Star, Copy, Check, Globe, Sparkles } from "lucide-react"
 
-import { getDomain, getFaviconUrl } from "../lib/favicon";
+import { getDomain, getFaviconUrl } from "../lib/favicon"
 
-import type { NavItem } from "../types";
+import type { NavItem } from "../types"
 
 interface NavCardProps {
-  item: NavItem;
-  isFavorite: boolean;
-  onToggleFavorite: (id: string) => void;
+  item: NavItem
+  isFavorite: boolean
+  onToggleFavorite: (id: string) => void
 }
 
 export const NavCard: React.FC<NavCardProps> = ({
@@ -16,29 +16,29 @@ export const NavCard: React.FC<NavCardProps> = ({
   isFavorite,
   onToggleFavorite,
 }) => {
-  const [copied, setCopied] = useState(false);
-  const [faviconError, setFaviconError] = useState(false);
+  const [copied, setCopied] = useState(false)
+  const [faviconError, setFaviconError] = useState(false)
 
-  const faviconUrl = getFaviconUrl(item.url);
-  const domain = getDomain(item.url);
+  const faviconUrl = getFaviconUrl(item.url)
+  const domain = getDomain(item.url)
 
   const handleCopy = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    navigator.clipboard.writeText(item.url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+    e.preventDefault()
+    e.stopPropagation()
+    navigator.clipboard.writeText(item.url)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onToggleFavorite(item.id);
-  };
+    e.preventDefault()
+    e.stopPropagation()
+    onToggleFavorite(item.title)
+  }
 
   return (
     <a
-      id={`nav-item-${item.id}`}
+      id={`nav-item-${item.title}`}
       href={item.url}
       target="_blank"
       rel="noopener noreferrer"
@@ -85,7 +85,7 @@ export const NavCard: React.FC<NavCardProps> = ({
           {/* Action Buttons */}
           <div className="flex items-center gap-1 shrink-0 opacity-80 group-hover:opacity-100 transition-opacity">
             <button
-              id={`fav-btn-${item.id}`}
+              id={`fav-btn-${item.title}`}
               type="button"
               onClick={handleFavoriteClick}
               title={isFavorite ? "Remove favorite" : "Add favorite"}
@@ -101,7 +101,7 @@ export const NavCard: React.FC<NavCardProps> = ({
             </button>
 
             <button
-              id={`copy-btn-${item.id}`}
+              id={`copy-btn-${item.title}`}
               type="button"
               onClick={handleCopy}
               title="Copy link"
@@ -128,7 +128,7 @@ export const NavCard: React.FC<NavCardProps> = ({
 
       {/* Footer Tags */}
       <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-neutral-100 dark:border-neutral-800/80">
-        {item.tags.slice(0, 3).map((tag) => (
+        {item.tags.slice(0, 3).map(tag => (
           <span
             key={tag}
             className="text-[11px] font-normal px-2 py-0.5 rounded-md bg-neutral-100 dark:bg-neutral-800/70 text-neutral-600 dark:text-neutral-400"
@@ -143,5 +143,5 @@ export const NavCard: React.FC<NavCardProps> = ({
         )}
       </div>
     </a>
-  );
-};
+  )
+}

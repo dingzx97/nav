@@ -1,10 +1,10 @@
-import React from "react";
-import { SearchX, Star, RotateCcw, ArrowLeft } from "lucide-react";
+import React from "react"
+import { SearchX, Star, RotateCcw, ArrowLeft } from "lucide-react"
 
 interface EmptyStateProps {
-  searchQuery?: string;
-  isFavorites?: boolean;
-  onClear: () => void;
+  searchQuery?: string
+  isFavorites?: boolean
+  onClear: () => void
 }
 
 export const EmptyState: React.FC<EmptyStateProps> = ({
@@ -12,7 +12,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   isFavorites = false,
   onClear,
 }) => {
-  const hasSearch = !!searchQuery.trim();
+  const hasSearch = !!searchQuery.trim()
 
   // Case 1: Favorites empty with no search query
   if (isFavorites && !hasSearch) {
@@ -28,7 +28,8 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           No favorites yet
         </h3>
         <p className="text-sm text-neutral-500 dark:text-neutral-400 max-w-md mb-6 leading-relaxed">
-          You have not saved any tools or documentation yet. Select the star on a card to add it here.
+          You have not saved any tools or documentation yet. Select the star on
+          a card to add it here.
         </p>
         <button
           id="back-to-all-from-empty-fav"
@@ -40,7 +41,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           <span>Browse all resources</span>
         </button>
       </div>
-    );
+    )
   }
 
   // Case 2: Favorites with search query that yielded no results
@@ -73,7 +74,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           <span>Clear search</span>
         </button>
       </div>
-    );
+    )
   }
 
   // Case 3: Regular search with no results
@@ -105,5 +106,5 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
         <span>Clear search</span>
       </button>
     </div>
-  );
-};
+  )
+}

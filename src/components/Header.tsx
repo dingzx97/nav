@@ -1,25 +1,25 @@
-import React, { useRef, useEffect } from "react";
-import { Search, X, Plus, Star, Layers } from "lucide-react";
+import React, { useRef, useEffect } from "react"
+import { Search, X, Plus, Star, Layers } from "lucide-react"
 
-import { ThemeToggle } from "./ThemeToggle";
+import { ThemeToggle } from "./ThemeToggle"
 
-import { CATEGORIES } from "../data/links";
+import { CATEGORIES } from "../data/links"
 
-import type { ThemeMode } from "../types";
+import type { ThemeMode } from "../types"
 
 interface HeaderProps {
-  searchQuery: string;
-  onSearchChange: (query: string) => void;
-  selectedCategory: string | null;
-  onSelectCategory: (categoryId: string | null) => void;
-  showFavoritesOnly: boolean;
-  onToggleFavoritesOnly: () => void;
-  favoritesCount: number;
-  onOpenAddModal: () => void;
-  theme: ThemeMode;
-  resolvedDark: boolean;
-  onThemeChange: (theme: ThemeMode) => void;
-  totalCount: number;
+  searchQuery: string
+  onSearchChange: (query: string) => void
+  selectedCategory: string | null
+  onSelectCategory: (categoryId: string | null) => void
+  showFavoritesOnly: boolean
+  onToggleFavoritesOnly: () => void
+  favoritesCount: number
+  onOpenAddModal: () => void
+  theme: ThemeMode
+  resolvedDark: boolean
+  onThemeChange: (theme: ThemeMode) => void
+  totalCount: number
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -36,7 +36,7 @@ export const Header: React.FC<HeaderProps> = ({
   onThemeChange,
   totalCount,
 }) => {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -45,22 +45,22 @@ export const Header: React.FC<HeaderProps> = ({
         (e.key === "/" && document.activeElement !== inputRef.current) ||
         ((e.metaKey || e.ctrlKey) && e.key === "k")
       ) {
-        e.preventDefault();
-        inputRef.current?.focus();
+        e.preventDefault()
+        inputRef.current?.focus()
       } else if (
         e.key === "Escape" &&
         document.activeElement === inputRef.current
       ) {
-        inputRef.current?.blur();
+        inputRef.current?.blur()
         if (searchQuery) {
-          onSearchChange("");
+          onSearchChange("")
         }
       }
-    };
+    }
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [searchQuery, onSearchChange]);
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [searchQuery, onSearchChange])
 
   return (
     <header
@@ -75,9 +75,9 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               type="button"
               onClick={() => {
-                onSelectCategory(null);
-                if (showFavoritesOnly) onToggleFavoritesOnly();
-                if (searchQuery) onSearchChange("");
+                onSelectCategory(null)
+                if (showFavoritesOnly) onToggleFavoritesOnly()
+                if (searchQuery) onSearchChange("")
               }}
               className="flex items-center gap-2.5 text-left group"
             >
@@ -111,7 +111,7 @@ export const Header: React.FC<HeaderProps> = ({
                 ref={inputRef}
                 type="text"
                 value={searchQuery}
-                onChange={(e) => onSearchChange(e.target.value)}
+                onChange={e => onSearchChange(e.target.value)}
                 placeholder="Search tools, docs, or tags (press / or ⌘K)..."
                 className="w-full pl-9 pr-14 py-2 text-sm bg-neutral-100/80 dark:bg-neutral-900 border border-transparent dark:border-neutral-800 rounded-xl focus:outline-hidden focus:border-neutral-300 dark:focus:border-neutral-700 focus:bg-white dark:focus:bg-neutral-900 text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500 transition-all"
               />
@@ -171,8 +171,8 @@ export const Header: React.FC<HeaderProps> = ({
             id="cat-btn-all"
             type="button"
             onClick={() => {
-              if (showFavoritesOnly) onToggleFavoritesOnly();
-              onSelectCategory(null);
+              if (showFavoritesOnly) onToggleFavoritesOnly()
+              onSelectCategory(null)
             }}
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors ${
               selectedCategory === null && !showFavoritesOnly
@@ -220,17 +220,17 @@ export const Header: React.FC<HeaderProps> = ({
 
           <div className="w-px h-4 bg-neutral-200 dark:bg-neutral-800 mx-1 shrink-0" />
 
-          {CATEGORIES.map((cat) => {
+          {CATEGORIES.map(cat => {
             const isSelected =
-              selectedCategory === cat.id && !showFavoritesOnly;
+              selectedCategory === cat.title && !showFavoritesOnly
             return (
               <button
-                key={cat.id}
-                id={`cat-btn-${cat.id}`}
+                key={cat.title}
+                id={`cat-btn-${cat.title}`}
                 type="button"
                 onClick={() => {
-                  if (showFavoritesOnly) onToggleFavoritesOnly();
-                  onSelectCategory(cat.id);
+                  if (showFavoritesOnly) onToggleFavoritesOnly()
+                  onSelectCategory(cat.title)
                 }}
                 className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors ${
                   isSelected
@@ -238,12 +238,12 @@ export const Header: React.FC<HeaderProps> = ({
                     : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-900"
                 }`}
               >
-                <span>{cat.name}</span>
+                <span>{cat.title}</span>
               </button>
-            );
+            )
           })}
         </div>
       </div>
     </header>
-  );
-};
+  )
+}
