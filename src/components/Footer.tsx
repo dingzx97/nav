@@ -14,7 +14,7 @@ export const Footer: React.FC<FooterProps> = ({ totalLinks }) => {
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-neutral-500 dark:text-neutral-400">
         <div className="flex items-center gap-2">
           <Terminal className="w-4 h-4 text-neutral-400 dark:text-neutral-500" />
-          <span>DevNav · A clean, lightweight developer hub</span>
+          <span>Nav · A simple navigation website</span>
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-4 text-neutral-500 dark:text-neutral-400">

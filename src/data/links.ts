@@ -1,10 +1,38 @@
-import { Bitcoin, Cloud, EyeDashed } from "lucide-react"
+import { Bitcoin, Cloud, EyeDashed, Parasol } from "lucide-react"
 
 import { flattenCategoryTree } from "../lib/utils"
 
 import type { Category, NavItem } from "../types"
 
 export const CATEGORIES: Category[] = [
+  {
+    title: "Daily",
+    description: "Daily Websites",
+    icon: Parasol,
+    subcategories: [
+      {
+        title: "Media",
+        description: "Video, Music, Live",
+        items: [
+          {
+            title: "YouTube",
+            description:
+              "Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube.",
+            url: "https://www.youtube.com",
+            tags: ["Video", "Music", "Live"],
+            featured: true,
+          },
+          {
+            title: "Spotify",
+            description: "Web Player: Music for everyone",
+            url: "https://open.spotify.com",
+            tags: ["Music"],
+            featured: true,
+          },
+        ],
+      },
+    ],
+  },
   {
     title: "Web3 & Trading",
     description:
@@ -83,19 +111,27 @@ export const CATEGORIES: Category[] = [
             url: "https://www.okx.com",
             tags: ["Wallet", "CEX", "Trading"],
           },
+
+          {
+            title: "IC",
+            description:
+              "Trade currencies, stocks, CFDs on Commodities, futures, bonds, and digital assets safely and securely with power for better trades.",
+            url: "https://www.ic.com",
+            tags: ["CEX", "Trading", "Forex", "Crypto"],
+          },
           {
             title: "Hyperliquid",
             description:
               "Trade crypto, commodities, indices, FX, and real-world assets onchain, 24/7, without intermediaries.",
             url: "https://hyperliquid.xyz",
-            tags: ["DEX", "L1", "Trading"],
+            tags: ["DEX", "Trading", "L1"],
           },
           {
             title: "Aster",
             description:
               "Trade perpetuals on Aster, the top DEX with low fees, deep liquidity, multichain support, high leverage and yield.",
             url: "https://www.asterdex.com",
-            tags: ["DEX", "L1", "Trading"],
+            tags: ["DEX", "Trading", "L1"],
           },
           {
             title: "Uniswap",
@@ -214,6 +250,13 @@ export const CATEGORIES: Category[] = [
             tags: ["Crypto", "Prices", "Analytics", "Data", "liquidation"],
           },
           {
+            title: "RootData",
+            description:
+              "RootData is a Crypto asset data platform that provides comprehensive and reliable information on project introductions, teams, funding, and news, as well as products like the Crypto Top100 trending projects list. It has become an essential data platform for over 2 million Crypto users in their investment decision-making process, aiming to be a productivity-level tool for Crypto enthusiasts and investors.",
+            url: "https://www.rootdata.com",
+            tags: ["Analytics", "Blockchains", "Data"],
+          },
+          {
             title: "Dune",
             description:
               "Normalized blockchain datasets across stablecoins, tokenized assets, payments, trading, and lending.",
@@ -223,7 +266,7 @@ export const CATEGORIES: Category[] = [
         ],
       },
       {
-        title: "Mining",
+        title: "Mining & Airdrops",
         description: "Become a crypto miner",
         items: [
           {
@@ -239,6 +282,13 @@ export const CATEGORIES: Category[] = [
               "Mine with your PC or ASIC and get paid in popular coins like BTC, DOGE, SOL, and USDT. Use unMiner or your preferred mining software with unMineable.",
             url: "https://unmineable.com",
             tags: ["Miner"],
+          },
+          {
+            title: "mempool",
+            description:
+              "Explore the full Bitcoin ecosystem with The Mempool Open Source Project®. See the real-time status of your transactions, get network info, and more.",
+            url: "https://mempool.space",
+            tags: ["Analytics", "Miner", "BTC", "Data"],
           },
         ],
       },
@@ -287,6 +337,26 @@ export const CATEGORIES: Category[] = [
               "RackNerd - Global Dedicated Servers. Introducing Infrastructure Stability",
             url: "https://www.racknerd.com",
             tags: ["VPS"],
+          },
+        ],
+      },
+      {
+        title: "Tools",
+        description: "tools",
+        items: [
+          {
+            title: "Globalping",
+            description:
+              "Run free latency tests and network commands like ping, traceroute, HTTP and DNS resolve on probes located worldwide.",
+            url: "https://globalping.io",
+            tags: ["IP", "DNS"],
+          },
+          {
+            title: "IP2Location",
+            description:
+              "IP Address Geolocation to Country, City, Region, Latitude, Longitude, ZIP Code, ISP, Domain, Time Zone, Area Code, Mobile Data, Usage Type, Elevation and so on.",
+            url: "https://www.ip2location.com",
+            tags: ["IP", "Location"],
           },
         ],
       },

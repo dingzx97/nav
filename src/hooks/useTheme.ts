@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import type { ThemeMode } from "../types"
 
 const STORAGE_KEY = "theme"
+
 const DEFAULT_THEME: ThemeMode = "system"
 
 const isThemeMode = (value: string | null): value is ThemeMode =>

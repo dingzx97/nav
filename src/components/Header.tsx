@@ -4,6 +4,7 @@ import { Search, X, Plus, Star, Layers } from "lucide-react"
 import { ThemeToggle } from "./ThemeToggle"
 
 import { CATEGORIES } from "../data/links"
+import { SITE_CONFIG } from "../data/site"
 
 import type { ThemeMode } from "../types"
 
@@ -87,14 +88,14 @@ export const Header: React.FC<HeaderProps> = ({
               <div className="hidden sm:block">
                 <div className="flex items-center gap-1.5">
                   <span className="font-semibold text-base tracking-tight text-neutral-900 dark:text-neutral-100">
-                    DevNav
+                    {SITE_CONFIG.title}
                   </span>
                   <span className="text-[10px] uppercase font-medium px-1.5 py-0.2 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
-                    Static
+                    main
                   </span>
                 </div>
                 <p className="text-[11px] text-neutral-500 dark:text-neutral-400 -mt-0.5">
-                  Developer tools and documentation
+                  {SITE_CONFIG.description}
                 </p>
               </div>
             </button>
