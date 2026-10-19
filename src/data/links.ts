@@ -253,7 +253,7 @@ export const CATEGORIES: Category[] = [
             title: "RootData",
             description:
               "RootData is a Crypto asset data platform that provides comprehensive and reliable information on project introductions, teams, funding, and news, as well as products like the Crypto Top100 trending projects list. It has become an essential data platform for over 2 million Crypto users in their investment decision-making process, aiming to be a productivity-level tool for Crypto enthusiasts and investors.",
-            url: "https://www.rootdata.com",
+            url: "https://rootdata.com",
             tags: ["Analytics", "Blockchains", "Data"],
           },
           {
@@ -356,6 +356,13 @@ export const CATEGORIES: Category[] = [
             description:
               "IP Address Geolocation to Country, City, Region, Latitude, Longitude, ZIP Code, ISP, Domain, Time Zone, Area Code, Mobile Data, Usage Type, Elevation and so on.",
             url: "https://www.ip2location.com",
+            tags: ["Traffic", "Bots", "Security", "Routing", "DNS", "Tools"],
+          },
+          {
+            title: "Cloudflare Radar",
+            description:
+              "Up to date global Internet trends and insights.",
+            url: "https://radar.cloudflare.com",
             tags: ["IP", "Location"],
           },
         ],

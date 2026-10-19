@@ -1,6 +1,0 @@
-{
-  "name": "Nav",
-  "description": "A simple navigation website.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}

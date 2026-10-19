@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react"
 import { Layers, Star, X, ChevronDown, ChevronRight } from "lucide-react"
 
 import { CATEGORIES } from "../data/links"
-import { SITE_CONFIG } from "../data/site"
 
 import type { Category } from "../types"
 
@@ -137,14 +136,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div>
               <div className="flex items-center gap-1.5">
                 <span className="font-semibold text-base tracking-tight text-neutral-900 dark:text-neutral-100">
-                  {SITE_CONFIG.title}
+                  Nav
                 </span>
                 <span className="text-[10px] uppercase font-medium px-1.5 py-0.2 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
                   Static
                 </span>
               </div>
               <p className="text-[11px] text-neutral-500 dark:text-neutral-400 -mt-0.5">
-                {SITE_CONFIG.description}
+                A simple navigation website.
               </p>
             </div>
           </button>
