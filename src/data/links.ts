@@ -31,6 +31,19 @@ export const CATEGORIES: Category[] = [
           },
         ],
       },
+      {
+        title: "Tools",
+        description: "tools",
+        items: [
+          {
+            title: "Squoosh",
+            description:
+              "Squoosh is the ultimate image optimizer that allows you to compress and compare images with different codecs in your browser.",
+            url: "https://squoosh.app",
+            tags: ["Image Optimizer", "Image Compression","Format Conversion"],
+          },
+        ],
+      },
     ],
   },
   {
@@ -360,8 +373,7 @@ export const CATEGORIES: Category[] = [
           },
           {
             title: "Cloudflare Radar",
-            description:
-              "Up to date global Internet trends and insights.",
+            description: "Up to date global Internet trends and insights.",
             url: "https://radar.cloudflare.com",
             tags: ["IP", "Location"],
           },
